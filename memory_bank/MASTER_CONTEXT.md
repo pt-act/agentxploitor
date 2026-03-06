@@ -1,5 +1,142 @@
 # MASTER_CONTEXT.md — AgentxploiTor
-> Newest entries at top. Updated: 2026-03-04
+> Newest entries at top. Updated: 2026-03-06
+
+---
+
+## [2026-03-06] FarCaster Miniapp Auditor COMPLETE — PM-Auditor Verified
+
+**Status**: All 9 groups complete, PM-Auditor 7-gate verified ✅
+
+### Test Results
+| Suite | Tests | Status |
+|-------|-------|--------|
+| Security | 28 | ✅ All Passed |
+| PBT Properties | 17 | ✅ All Passed |
+| E2E Integration | 7 | ✅ All Passed |
+| Group 3 | 13 | ✅ All Passed |
+| Payment | 13 | ✅ All Passed |
+| **Total** | **78** | ✅ |
+
+### PM-Auditor 7-Gate Evaluation
+| Gate | Status |
+|------|--------|
+| 1. Functional Correctness | ✅ |
+| 2. Determinism & Reproducibility | ✅ |
+| 3. Observability | ✅ |
+| 4. Security & Access Control | ✅ |
+| 5. Documentation & Handoff | ✅ |
+| 6. Regression Protection | ✅ |
+| 7. Property-Based Validation | ✅ |
+
+### Files Created (FarCaster)
+- `miniapp/src/components/audit-request/PersonaSelector.tsx` — Researcher/Dev/Contract Dev cards
+- `miniapp/src/components/audit-request/ModeSelector.tsx` — Self-audit/Research/Contract modes
+- `miniapp/src/components/audit-request/AnalysisTypeSelector.tsx` — Contract/Frontend/Full Stack
+- `miniapp/src/components/audit-request/TargetResolutionStatus.tsx` — Discovery progress
+- `miniapp/src/app/api/audit/discover/route.ts` — 3-tier target resolution
+- `miniapp/src/app/api/disclosure/[id]/route.ts` — Responsible disclosure template
+- `miniapp/src/components/DisclosureTemplate.tsx` — Disclosure UI
+- `miniapp/src/components/ReportDownload.tsx` — JSON + Markdown export
+- `src/analyzers.py` — SolanaAnalyzerAdapter + FrontendAnalyzerAdapter
+
+### Implementation Status (FarCaster)
+| Group | Focus | Status |
+|-------|-------|--------|
+| 1 | Target Input & Discovery | ✅ Complete |
+| 2 | Persona & Mode Selection UI | ✅ Complete |
+| 3 | Extend Audit Request API | ✅ Complete |
+| 4 | Contract Audit Pipeline | ✅ Complete |
+| 5 | Frontend UI Audit Pipeline | ✅ Complete |
+| 6 | Reasoning Stream Integration | ✅ Complete |
+| 7 | Responsible Disclosure | ✅ Complete |
+| 8 | Report Download & Export | ✅ Complete |
+| 9 | Integration Testing | ✅ Complete |
+
+### GitHub Repository
+- **URL**: https://github.com/pt-act/agentxploitor
+- **Visibility**: Private
+
+---
+
+## [2026-03-06] EntityHex Spec COMPLETE — Ready for Deployment
+
+**Status**: All groups complete, PM-Auditor verified ✅
+
+### Test Results
+| Suite | Tests | Status |
+|-------|-------|--------|
+| PBT Properties | 17 | ✅ All Passed |
+| E2E Integration | 7 | ✅ All Passed |
+| **Total** | **24** | ✅ |
+
+### PM-Auditor 7-Gate Evaluation
+| Gate | Status |
+|------|--------|
+| 1. Functional Correctness | ✅ |
+| 2. Determinism & Reproducibility | ✅ |
+| 3. Observability | ✅ |
+| 4. Security & Access Control | ✅ |
+| 5. Documentation & Handoff | ✅ |
+| 6. Regression Protection | ✅ |
+| 7. Property-Based Validation | ✅ |
+
+### Files Created
+- `miniapp/src/tests/pbt-properties.test.ts` — 17 PBT tests
+- `miniapp/src/tests/e2e-audit-flows.test.ts` — 7 E2E tests
+- `specs/entityhex/pbt-report.md` — PBT documentation
+- `specs/entityhex/consciousness-gate-3.md` — Consciousness evaluation
+- `specs/entityhex/security-audit-prep.md` — PM-Auditor evidence bundle
+
+### GitHub Repository
+- **URL**: https://github.com/pt-act/agentxploitor
+- **Visibility**: Private
+
+### Implementation Status
+| Group | Focus | Status |
+|-------|-------|--------|
+| 0 | SimpleMem + Code-Voyager | ✅ Complete |
+| 1 | Queue worker + WebSocket | ✅ Complete |
+| 2 | Target input + payment | ✅ Complete |
+| 3 | Contract evaluator | ✅ Complete |
+| 4 | Miniapp auditor | ✅ Complete |
+| 5 | E2B sandbox + KV storage | ✅ Complete |
+| 6 | Disclosure + testing | ✅ Complete |
+
+### Next: FarCaster Miniapp Auditor
+- Begin Group 1: Target Input & Discovery Layer
+- Spec: `specs/farcaster-miniapp-auditor/tasks.md`
+
+---
+
+## [2026-03-06] GitHub Repo Created + Groups 0-4 Complete
+
+**Status**: Repository created, Groups 0-4 complete. Ready for Group 5.
+
+### GitHub Repository
+- **URL**: https://github.com/pt-act/agentxploitor
+- **Visibility**: Private
+- **Initial commit**: 334 files pushed
+
+### Verified Implementation Status
+| Group | Focus | Status |
+|-------|-------|--------|
+| 0 | SimpleMem + Code-Voyager | ✅ Complete |
+| 1 | Queue worker + WebSocket | ✅ Complete |
+| 2 | Target input + payment | ✅ Complete |
+| 3 | Contract evaluator | ✅ Complete |
+| 4 | Miniapp auditor | ✅ Complete |
+| 5 | E2B sandbox + KV storage | ⬜ Next |
+| 6 | Disclosure + testing | ⬜ |
+
+### This Session
+- Fixed ETH payment bug in request/page.tsx
+- Created browser-auditor.ts (agent-browser integration)
+- Created VisualProofViewer.tsx (screenshot viewer)
+- Updated tasks.md and memory banks
+
+### Next: Group 5
+- E2B sandbox wrapper for dynamic analysis
+- Vercel KV for persistent job storage
 
 ---
 

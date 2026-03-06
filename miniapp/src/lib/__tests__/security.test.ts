@@ -143,7 +143,7 @@ describe('generateSecureAuditId', () => {
 
 describe('AUDIT_ID_PATTERN', () => {
   it('matches valid audit IDs', () => {
-    const validId = 'audit-1234567890-abcdef1234567890abcdef123456789012';
+    const validId = 'audit-1234567890-abcdef1234567890abcdef1234567890';
     expect(AUDIT_ID_PATTERN.test(validId)).toBe(true);
   });
 
@@ -165,7 +165,7 @@ describe('AUDIT_ID_PATTERN', () => {
 
 describe('validateAuditId', () => {
   it('returns true for valid audit IDs', () => {
-    const validId = 'audit-1234567890-abcdef1234567890abcdef123456789012';
+    const validId = 'audit-1234567890-abcdef1234567890abcdef1234567890';
     expect(validateAuditId(validId)).toBe(true);
   });
 

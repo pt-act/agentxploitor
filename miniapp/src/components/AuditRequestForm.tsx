@@ -4,11 +4,14 @@ import { useState, useCallback } from 'react';
 import { Button } from './ui/Button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { AuditType, TargetType, PaymentToken, ResolvedTarget } from '~/lib/types';
+import { AuditType, TargetType, PaymentToken, ResolvedTarget, Persona, AuditMode, AnalysisType } from '~/lib/types';
 import {
   PRICES, AUDIT_TYPE_LABELS, displayPrice, defaultAuditType,
   DetectionBadge, AuditTypeCard, PaymentTokenSelector,
 } from './audit-form/AuditFormParts';
+import PersonaSelector from './audit-request/PersonaSelector';
+import ModeSelector from './audit-request/ModeSelector';
+import AnalysisTypeSelector from './audit-request/AnalysisTypeSelector';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,6 +22,10 @@ export interface AuditFormData {
   paymentToken: PaymentToken;
   priceUsd: number;
   scope: string;
+  // FarCaster Miniapp Auditor fields
+  persona?: Persona;
+  mode?: AuditMode;
+  analysisType?: AnalysisType;
 }
 
 interface AuditRequestFormProps {
@@ -38,6 +45,11 @@ export default function AuditRequestForm({ onSubmit }: AuditRequestFormProps) {
   const [auditType, setAuditType]             = useState<AuditType>('contract_deep');
   const [paymentToken, setPaymentToken]       = useState<PaymentToken>('eth');
   const [isSubmitting, setIsSubmitting]       = useState(false);
+
+  // FarCaster Miniapp Auditor - Persona/Mode/Analysis
+  const [persona, setPersona]                 = useState<Persona | undefined>();
+  const [mode, setMode]                       = useState<AuditMode | undefined>();
+  const [analysisType, setAnalysisType]       = useState<AnalysisType | undefined>();
 
   // ── Input detection & resolution ─────────────────────────────────────────
 
@@ -98,6 +110,10 @@ export default function AuditRequestForm({ onSubmit }: AuditRequestFormProps) {
         paymentToken,
         priceUsd: PRICES[auditType] * (paymentToken === 'bnkr' ? 0.8 : 1),
         scope: auditType,
+        // FarCaster Miniapp Auditor fields
+        persona,
+        mode,
+        analysisType,
       });
     } finally {
       setIsSubmitting(false);
@@ -183,6 +199,46 @@ export default function AuditRequestForm({ onSubmit }: AuditRequestFormProps) {
             <PaymentTokenSelector selected={paymentToken} onChange={setPaymentToken} />
           </section>
 
+          {/* ── Step 4: Persona Selection (FarCaster Miniapp Auditor) ── */}
+          <section>
+            <Label className="text-white mb-3 block text-base font-semibold">
+              4. Select your role
+            </Label>
+            <PersonaSelector
+              value={persona}
+              onChange={setPersona}
+              disabled={isSubmitting}
+            />
+          </section>
+
+          {/* ── Step 5: Audit Mode (FarCaster Miniapp Auditor) ── */}
+          {persona && (
+            <section>
+              <Label className="text-white mb-3 block text-base font-semibold">
+                5. Select audit mode
+              </Label>
+              <ModeSelector
+                value={mode}
+                onChange={setMode}
+                disabled={isSubmitting}
+              />
+            </section>
+          )}
+
+          {/* ── Step 6: Analysis Type (FarCaster Miniapp Auditor) ── */}
+          {mode && (
+            <section>
+              <Label className="text-white mb-3 block text-base font-semibold">
+                6. Analysis type
+              </Label>
+              <AnalysisTypeSelector
+                value={analysisType}
+                onChange={setAnalysisType}
+                disabled={isSubmitting}
+              />
+            </section>
+          )}
+
           {/* ── Summary ── */}
           <div className="bg-[#0a0e27] border border-gray-700 rounded-lg p-4 space-y-2">
             <div className="flex justify-between items-center">
@@ -191,6 +247,24 @@ export default function AuditRequestForm({ onSubmit }: AuditRequestFormProps) {
                 {AUDIT_TYPE_LABELS[auditType].title}
               </span>
             </div>
+            {persona && (
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400 text-sm">Role</span>
+                <span className="text-white text-sm capitalize">{persona}</span>
+              </div>
+            )}
+            {mode && (
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400 text-sm">Mode</span>
+                <span className="text-white text-sm capitalize">{mode.replace('_', ' ')}</span>
+              </div>
+            )}
+            {analysisType && (
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400 text-sm">Analysis</span>
+                <span className="text-white text-sm capitalize">{analysisType}</span>
+              </div>
+            )}
             <div className="flex justify-between items-center">
               <span className="text-gray-400 text-sm">Chain</span>
               <span className="text-white text-sm">Base (EVM)</span>

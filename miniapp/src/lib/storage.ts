@@ -142,6 +142,10 @@ export interface CreateJobInput {
   discoveryTier?: 1 | 2 | 3;
   paymentToken?: import('./types').PaymentToken;
   requestedByFid?: number;
+  // FarCaster Miniapp Auditor fields
+  persona?: import('./types').Persona;
+  mode?: import('./types').AuditMode;
+  analysisType?: import('./types').AnalysisType;
   // Original fields
   scope: string;
   priority: 'low' | 'medium' | 'high' | 'critical';

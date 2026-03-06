@@ -1,40 +1,13 @@
 # current_focus.md
-> Updated: 2026-03-04
 
-## Active Feature: EntityHex-Powered AgentxploiTor Miniapp
+> Updated: 2026-03-06
 
-**Phase**: Specification Complete → Ready for Implementation
+## Active Feature: FarCaster Miniapp Auditor
 
-**What we're building**:
-Two features that establish AgentxploiTor as the trust infrastructure for the Base/Farcaster
-ecosystem — powered by EntityHex's Security Agent + HexStrike's 12 agents behind the scenes.
+**Phase**: COMPLETE ✅ — PM-Auditor Verified
 
-**Feature 1: Smart Contract Evaluator**
-- Accept: contract address (EVM/Solana), GitHub repo, chain auto-detection
-- Analysis: Slither + Mythril + HexStrike full 12-agent deep analysis via EntityHex Security Agent
-- Output: severity-ranked report, CVE matches, attack chains, independence declaration
-
-**Feature 2: Miniapp Auditor**
-- Accept: HTTPS URL or plain miniapp name (3-tier discovery)
-- Analysis: agent-browser UI surface audit + visual proof + auto-feeds contracts to Feature 1
-- Output: UI findings with before/after screenshots, responsible disclosure template
-
-**Active Spec**: `specs/entityhex/spec.md` (repurposed 2026-03-04)
-**Active Tasks**: `specs/entityhex/tasks.md` (repurposed 2026-03-04)
-
-**Note**: `specs/farcaster-miniapp-auditor/` was written earlier today in this workspace
-before full context was loaded. It is superseded by the entityhex spec. It can be archived.
-
----
-
-## Key Decisions (Do Not Revisit)
-
-- No free tier — real compute cost per audit, margin must be protected
-- No refunds — peace of mind is the product regardless of outcome
-- ETH/USDC on Base primary, BNKR 20% discount (not a gate)
-- E2B sandbox for dynamic analysis
-- EntityHex = B2B sibling, NOT a backend for AgentxploiTor exclusively
-- EntityHex's Security Agent IS the audit backend — do not duplicate it
+**Spec**: `specs/farcaster-miniapp-auditor/spec.md`
+**Tasks**: `specs/farcaster-miniapp-auditor/tasks.md`
 
 ---
 
@@ -42,39 +15,64 @@ before full context was loaded. It is superseded by the entityhex spec. It can b
 
 | Group | Focus | Status |
 |-------|-------|--------|
-| 0 | SimpleMem + Code-Voyager foundation | ✅ COMPLETE |
-| 1 | Queue worker + WebSocket bridge | ✅ COMPLETE |
-| 2 | Target input extension + payment | ✅ COMPLETE |
-| 3 | Smart contract evaluator pipeline | ✅ COMPLETE |
-| 4 | Miniapp auditor + visual proof | ⬜ NEXT |
-| 5 | E2B sandbox + persistent storage | ⬜ |
-| 6 | Disclosure + integration testing | ⬜ |
+| 1 | Target Input & Discovery | ✅ Complete |
+| 2 | Persona & Mode Selection UI | ✅ Complete |
+| 3 | Extend Audit Request API | ✅ Complete |
+| 4 | Contract Audit Pipeline | ✅ Complete |
+| 5 | Frontend UI Audit Pipeline | ✅ Complete |
+| 6 | Reasoning Stream Integration | ✅ Complete |
+| 7 | Responsible Disclosure | ✅ Complete |
+| 8 | Report Download & Export | ✅ Complete |
+| 9 | Integration Testing | ✅ Complete |
 
 ---
 
-## Next Action — Group 2
+## PM-Auditor 7-Gate Evaluation ✅
 
-Start with these two items in parallel:
-1. **`TargetInputForm.tsx`** — extend to accept contract address, GitHub URL, plain name
-2. **`/api/audit/discover`** route — 3-tier name resolution (Warpcast API → GitHub → ask user)
-
-Then: `AuditTypeSelector.tsx` (price display per type) + payment form `writeContract()` completion.
-
-**Spec**: `specs/entityhex/tasks.md` — Group 2 tasks all ⬜ Pending
+All gates passed:
+- Gate 1: Functional Correctness ✅
+- Gate 2: Determinism & Reproducibility ✅
+- Gate 3: Observability ✅
+- Gate 4: Security & Access Control ✅
+- Gate 5: Documentation & Handoff ✅
+- Gate 6: Regression Protection ✅
+- Gate 7: Property-Based Validation ✅
 
 ---
 
-## Strategic Decisions Locked (Do Not Revisit)
+## Test Results
 
-- No free tier — real compute cost per audit
-- No refunds — peace of mind IS the product
-- ETH/USDC on Base primary, BNKR 20% discount
-- E2B sandbox for dynamic analysis
-- EntityHex = B2B sibling, NOT absorbed by AgentxploiTor
-- Phase 1 → Phase 2 (monitoring) → Phase 3 (EntityHex full reveal)
+| Suite | Tests | Status |
+|-------|-------|--------|
+| Security | 28 | ✅ |
+| PBT Properties | 17 | ✅ |
+| E2E Integration | 7 | ✅ |
+| Group 3 | 13 | ✅ |
+| Payment | 13 | ✅ |
+| **Total** | **78** | ✅ |
+
+---
+
+## Next Action
+
+All planned work complete. Ready for next feature.
+
+---
+
+## Previous Work
+
+### EntityHex Spec ✅ COMPLETE
+
+All groups complete with 24 tests passing:
+- PBT: 17 tests ✅
+- E2E: 7 tests ✅
+
+PM-Auditor 7-gate evaluation passed.
+
+**GitHub**: https://github.com/pt-act/agentxploitor (private)
 
 ---
 
 ## Blockers
 
-None. Foundation complete. TypeScript clean. Tests passing.
+None. All planned work complete.

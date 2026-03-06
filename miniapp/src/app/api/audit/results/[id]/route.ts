@@ -56,6 +56,10 @@ export async function GET(
         paymentToken: job.paymentToken,
         requestedByFid: job.requestedByFid,
         completedAt: job.updatedAt,
+        // FarCaster Miniapp Auditor fields
+        mode: job.mode,
+        persona: job.persona,
+        analysisType: job.analysisType,
       },
     });
 

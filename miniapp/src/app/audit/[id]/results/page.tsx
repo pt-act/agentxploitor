@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '~/components/ui/Button';
 import type { Vulnerability, AuditReport } from '~/lib/types';
+import DisclosureTemplate from '~/components/DisclosureTemplate';
+import ReportDownload from '~/components/ReportDownload';
 
 export default function AuditResultsPage() {
   const params = useParams();
@@ -13,6 +15,7 @@ export default function AuditResultsPage() {
   const [report, setReport] = useState<AuditReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showDisclosure, setShowDisclosure] = useState(false);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -228,20 +231,38 @@ export default function AuditResultsPage() {
         {/* Actions */}
         <div className="bg-[#1a1f3a] border border-gray-800 rounded-lg p-6">
           <h3 className="text-xl font-bold mb-4">Actions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button className="bg-[#00ff41] text-[#0a0e27] hover:bg-[#00dd35]">
-              📥 Download PDF Report
-            </Button>
-            <Button onClick={() => navigator.clipboard.writeText(JSON.stringify(report, null, 2))} className="border border-gray-700">
-              📋 Copy JSON
-            </Button>
+          
+          {/* Report Download */}
+          <ReportDownload
+            auditId={auditId}
+            targetUrl={report.targetUrl}
+            findings={report.vulnerabilities || []}
+            summary={report.summary || {}}
+            confidence={report.evaluation?.confidence || 0}
+            createdAt={report.createdAt}
+            reporterFid={report.meta?.requestedByFid}
+          />
+
+          {/* Request new audit */}
+          <div className="mt-6 pt-6 border-t border-gray-700">
             <Button 
               onClick={() => router.push('/request')}
-              className="border border-gray-700"
+              className="w-full border border-gray-700"
             >
               🔄 Request New Audit
             </Button>
           </div>
+
+          {/* Responsible Disclosure - Only for research mode with medium+ findings */}
+          {report.meta?.mode === 'research' && totalFindings > 0 && (
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <h4 className="text-lg font-semibold mb-3">🔐 Responsible Disclosure</h4>
+              <p className="text-gray-400 text-sm mb-4">
+                Generate a responsible disclosure template to safely report vulnerabilities to the project team.
+              </p>
+              <DisclosureTemplate auditId={auditId} />
+            </div>
+          )}
         </div>
 
       </div>

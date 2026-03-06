@@ -2,128 +2,209 @@
 
 import { useState } from 'react';
 import { Button } from './ui/Button';
-import { AuditReport } from '~/lib/types';
-import { IndependenceDeclaration, Verdict, FindingCount } from '~/lib/report-builder';
 
 interface ReportDownloadProps {
   auditId: string;
-  targetValue: string;
-  verdict: Verdict;
-  report: AuditReport;
-  declaration: IndependenceDeclaration;
-  findingCount: FindingCount;
-  markdownReport: string;
+  targetUrl: string;
+  findings: any[];
+  summary: Record<string, number>;
+  confidence: number;
+  createdAt: string;
+  reporterFid?: number;
 }
 
 export default function ReportDownload({
   auditId,
-  targetValue,
-  verdict,
-  report,
-  declaration,
-  findingCount,
-  markdownReport,
+  targetUrl,
+  findings,
+  summary,
+  confidence,
+  createdAt,
+  reporterFid,
 }: ReportDownloadProps) {
-  const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState<'json' | 'markdown' | null>(null);
+
+  const generateJsonReport = () => {
+    const report = {
+      audit: {
+        id: auditId,
+        targetUrl,
+        createdAt,
+        confidence: confidence,
+        reporterFid,
+      },
+      summary: {
+        ...summary,
+        total: Object.values(summary).reduce((a, b) => a + b, 0),
+      },
+      findings: findings.map(f => ({
+        id: f.id,
+        title: f.title,
+        severity: f.severity,
+        cvssScore: f.cvssScore,
+        description: f.description,
+        location: f.location,
+        expectedOutcome: f.expectedOutcome,
+        exploitScenario: f.exploitScenario,
+        confidence: f.confidence,
+      })),
+      attribution: `Audited by AgentxploiTor via Farcaster | Reporter FID: ${reporterFid || 'Anonymous'}`,
+    };
+
+    return JSON.stringify(report, null, 2);
+  };
+
+  const generateMarkdownReport = () => {
+    const severityOrder = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFO'];
+    const lines = [
+      `# Security Audit Report`,
+      ``,
+      `**Audit ID:** ${auditId}`,
+      `**Target:** ${targetUrl}`,
+      `**Date:** ${new Date(createdAt).toLocaleDateString()}`,
+      `**Confidence:** ${Math.round(confidence * 100)}%`,
+      `**Reporter:** ${reporterFid ? `FID ${reporterFid}` : 'Anonymous'}`,
+      ``,
+      `---`,
+      ``,
+      `## Summary`,
+      ``,
+      `| Severity | Count |`,
+      `|----------|-------|`,
+      ...severityOrder.map(sev => `| ${sev} | ${summary[sev] || 0} |`),
+      ``,
+      `---`,
+      ``,
+      `## Findings`,
+      ``,
+    ];
+
+    for (const severity of severityOrder) {
+      const sevFindings = findings.filter(f => f.severity === severity);
+      if (sevFindings.length > 0) {
+        lines.push(`### ${severity} (${sevFindings.length})`);
+        lines.push(``);
+        
+        for (const f of sevFindings) {
+          lines.push(`#### ${f.title}`);
+          lines.push(``);
+          lines.push(`- **CVSS:** ${f.cvssScore?.toFixed(1) || 'N/A'}`);
+          lines.push(`- **Location:** ${f.location || 'N/A'}`);
+          lines.push(``);
+          lines.push(`**Description:**`);
+          lines.push(``);
+          lines.push(f.description || 'No description');
+          lines.push(``);
+          
+          if (f.expectedOutcome) {
+            lines.push(`**Recommended Fix:**`);
+            lines.push(``);
+            lines.push(f.expectedOutcome);
+            lines.push(``);
+          }
+          
+          if (f.exploitScenario) {
+            lines.push(`**Exploit Scenario:**`);
+            lines.push(``);
+            lines.push(f.exploitScenario);
+            lines.push(``);
+          }
+          
+          lines.push(`---`);
+          lines.push(``);
+        }
+      }
+    }
+
+    lines.push(`## Attribution`);
+    lines.push(``);
+    lines.push(`*Audited by AgentxploiTor via Farcaster | Reporter FID: ${reporterFid || 'Anonymous'}*`);
+    lines.push(``);
+    lines.push(`*Independent security audit - no affiliation with the audited project*`);
+
+    return lines.join('\n');
+  };
 
   const downloadJson = () => {
-    const payload = {
-      auditId,
-      targetValue,
-      verdict,
-      findingCount,
-      declaration,
-      report,
-      exportedAt: new Date().toISOString(),
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    setDownloading('json');
+    const blob = new Blob([generateJsonReport()], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `agentxploitor-audit-${auditId.slice(0, 8)}.json`;
+    a.download = `audit-${auditId}.json`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    setDownloading(null);
   };
 
   const downloadMarkdown = () => {
-    const blob = new Blob([markdownReport], { type: 'text/markdown' });
+    setDownloading('markdown');
+    const blob = new Blob([generateMarkdownReport()], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `agentxploitor-audit-${auditId.slice(0, 8)}.md`;
+    a.download = `audit-${auditId}.md`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-
-  const copyDeclaration = async () => {
-    await navigator.clipboard.writeText(declaration.text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const shareOnFarcaster = () => {
-    const verdictEmoji: Record<string, string> = {
-      BLOCKED: '🔴', REVIEW: '🟠', CAUTION: '🟡', CLEAR: '🟢', CLEAN: '✅',
-    };
-    const text = [
-      `${verdictEmoji[verdict] ?? '⚡'} Just audited ${targetValue} with @agentxploitor`,
-      ``,
-      `Verdict: ${verdict}`,
-      `Critical: ${findingCount.critical} | High: ${findingCount.high} | Medium: ${findingCount.medium}`,
-      ``,
-      `Independently verified — not affiliated with the project.`,
-      `Audit ID: ${auditId.slice(0, 8)}`,
-    ].join('\n');
-
-    const castUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`;
-    window.open(castUrl, '_blank');
+    setDownloading(null);
   };
 
   return (
-    <div className="bg-[#1a1f3a] border border-gray-800 rounded-lg p-6">
-      <h3 className="text-white font-semibold mb-4">Download & Share</h3>
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-white">📥 Download Report</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* JSON Report */}
+        <div className="bg-[#0a0e27] border border-gray-700 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">📋</span>
+            <div>
+              <h4 className="text-white font-medium">JSON Report</h4>
+              <p className="text-gray-500 text-xs">Machine-readable format</p>
+            </div>
+          </div>
+          <p className="text-gray-400 text-sm mb-4">
+            Includes: audit metadata, resolved targets, all findings, visual proof paths, confidence scores
+          </p>
+          <Button
+            onClick={downloadJson}
+            disabled={downloading !== null}
+            className="w-full bg-[#00ff41] text-[#0a0e27] hover:bg-[#00dd35] disabled:opacity-50"
+          >
+            {downloading === 'json' ? '⏳ Generating...' : 'Download JSON'}
+          </Button>
+        </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {/* JSON Download */}
-        <Button
-          onClick={downloadJson}
-          className="flex flex-col items-center gap-1 py-4 bg-[#0a0e27] border border-gray-700 hover:border-[#00ff41] text-gray-300 hover:text-[#00ff41] text-sm"
-        >
-          <span className="text-xl">{ }</span>
-          <span>JSON Report</span>
-        </Button>
-
-        {/* Markdown Download */}
-        <Button
-          onClick={downloadMarkdown}
-          className="flex flex-col items-center gap-1 py-4 bg-[#0a0e27] border border-gray-700 hover:border-[#00ff41] text-gray-300 hover:text-[#00ff41] text-sm"
-        >
-          <span className="text-xl">#</span>
-          <span>Markdown</span>
-        </Button>
-
-        {/* Copy Declaration */}
-        <Button
-          onClick={copyDeclaration}
-          className="flex flex-col items-center gap-1 py-4 bg-[#0a0e27] border border-gray-700 hover:border-[#00ff41] text-gray-300 hover:text-[#00ff41] text-sm"
-        >
-          <span className="text-xl">{copied ? '✓' : '⧉'}</span>
-          <span>{copied ? 'Copied!' : 'Declaration'}</span>
-        </Button>
-
-        {/* Share on Farcaster */}
-        <Button
-          onClick={shareOnFarcaster}
-          className="flex flex-col items-center gap-1 py-4 bg-[#0a0e27] border border-gray-700 hover:border-purple-400 text-gray-300 hover:text-purple-400 text-sm"
-        >
-          <span className="text-xl">⬡</span>
-          <span>Cast Result</span>
-        </Button>
+        {/* Markdown Report */}
+        <div className="bg-[#0a0e27] border border-gray-700 rounded-lg p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">📝</span>
+            <div>
+              <h4 className="text-white font-medium">Markdown Report</h4>
+              <p className="text-gray-500 text-xs">Human-readable format</p>
+            </div>
+          </div>
+          <p className="text-gray-400 text-sm mb-4">
+            Includes: severity table, finding descriptions, fix recommendations, full attribution
+          </p>
+          <Button
+            onClick={downloadMarkdown}
+            disabled={downloading !== null}
+            className="w-full bg-[#00ff41] text-[#0a0e27] hover:bg-[#00dd35] disabled:opacity-50"
+          >
+            {downloading === 'markdown' ? '⏳ Generating...' : 'Download Markdown'}
+          </Button>
+        </div>
       </div>
 
-      <p className="text-xs text-gray-600 mt-3">
-        Reports are generated at download time. Audit ID serves as permanent reference.
-      </p>
+      {/* Attribution Notice */}
+      <div className="text-center text-xs text-gray-500 pt-2 border-t border-gray-700">
+        <p>Audited by AgentxploiTor via Farcaster | Reporter FID: {reporterFid || 'Anonymous'}</p>
+      </div>
     </div>
   );
 }

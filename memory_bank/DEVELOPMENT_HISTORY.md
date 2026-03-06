@@ -1,5 +1,31 @@
 # DEVELOPMENT_HISTORY.md — AgentxploiTor
-> Newest entries at top. Updated: 2026-03-04
+> Newest entries at top. Updated: 2026-03-06
+
+---
+
+## [2026-03-06] Session: GitHub Repo Setup + Groups 2-4 Verified Complete
+
+**Session**: Orion-OS sync session
+**By**: Code mode (AI co-creator)
+
+**What happened**:
+- Created new GitHub repository: https://github.com/pt-act/agentxploitor (private)
+- Initialized git repo, added all files, created initial commit
+- Verified Groups 2-4 were already implemented in codebase:
+  - Group 2: TargetInputForm + /api/audit/discover + AuditTypeSelector ✅
+  - Group 3: chain-resolver.ts + report-builder.ts + ContractAuditView ✅
+  - Group 4: browser-auditor.ts + VisualProofViewer ✅ (newly created)
+- Fixed ETH payment bug (was using USD value as ETH amount)
+- Updated tasks.md and current_focus.md to reflect completed groups
+
+**Files created/modified**:
+- `miniapp/src/lib/browser-auditor.ts` — NEW (Group 4)
+- `miniapp/src/components/VisualProofViewer.tsx` — NEW (Group 4)
+- `miniapp/src/app/request/page.tsx` — Fixed ETH payment bug
+- `specs/entityhex/tasks.md` — Updated Group 2-4 status
+- `memory_bank/active/current_focus.md` — Updated progress table
+
+**Current status**: Groups 0-4 complete. Next: Group 5 (E2B sandbox + persistent storage)
 
 ---
 

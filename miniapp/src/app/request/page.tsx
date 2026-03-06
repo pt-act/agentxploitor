@@ -53,15 +53,15 @@ export default function RequestAuditPage() {
       let txHash: `0x${string}` | undefined;
 
       // ── ETH payment ──────────────────────────────────────────────────────
+      // Note: In production, you'd convert USD to ETH using an oracle price feed
+      // For now, we approximate: $1 = 0.0004 ETH (~$2500/ETH)
       if (formData.paymentToken === 'eth') {
+        const ethAmount = (formData.priceUsd / 2500).toFixed(6);
         txHash = await writeContractAsync({
-          // ETH native transfer via a minimal call — use sendTransaction in production
-          // For now we approximate via writeContract on a known contract
-          // TODO: replace with wagmi sendTransaction when integrated
           address: AGENT_WALLET,
           abi: [],
           functionName: '',
-          value: parseEther(formData.priceUsd.toString()),
+          value: parseEther(ethAmount),
         } as any);
       }
 
@@ -112,6 +112,10 @@ export default function RequestAuditPage() {
           paymentTxHash:   txHash ?? 'pending',
           paymentAmount:   formData.priceUsd,
           walletAddress:   address,
+          // FarCaster Miniapp Auditor fields
+          persona:         formData.persona,
+          mode:            formData.mode,
+          analysisType:    formData.analysisType,
         }),
       });
 

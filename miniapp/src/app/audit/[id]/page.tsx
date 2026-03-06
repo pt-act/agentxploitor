@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '~/components/ui/Button';
+import { ReasoningStream } from '~/components/ReasoningStream';
 import type { JobSession } from '~/lib/types';
 
 interface AuditStatus extends JobSession {
@@ -161,12 +162,14 @@ export default function AuditStatusPage() {
                 </div>
               </div>
 
-              {/* Live Console */}
-              <div className="bg-[#0a0e27] border border-gray-700 rounded-lg p-4 font-mono text-sm max-h-64 overflow-y-auto">
-                {logs.map((log, i) => (
-                  <div key={i} className="text-[#00ff41] mb-1">{log}</div>
-                ))}
-                <div className="text-[#00ff41] animate-pulse">▊</div>
+              {/* Live Reasoning Stream */}
+              <div className="bg-[#0a0e27] border border-gray-700 rounded-lg p-4">
+                <h3 className="text-white font-semibold mb-3">🤔 Agent Reasoning</h3>
+                <ReasoningStream 
+                  auditId={auditId} 
+                  level="normal"
+                  maxHeight="300px"
+                />
               </div>
             </div>
           )}

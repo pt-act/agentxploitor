@@ -3,7 +3,7 @@ import { Errors, createClient } from '@farcaster/quick-auth';
 import { validateTargetUrl, generateSecureAuditId } from '~/lib/security';
 import { verifyBNKRPayment, PAYMENT_CONFIG } from '~/lib/payment';
 import { createJob, jobStore } from '~/lib/storage';
-import type { JobSession } from '~/lib/types';
+import type { JobSession, Persona, AuditMode, AnalysisType } from '~/lib/types';
 
 const client = createClient();
 
@@ -84,6 +84,10 @@ export async function POST(request: NextRequest) {
       resolvedTarget,  // confirmed resolved target object
       discoveryTier,   // 1 | 2 | 3 — which tier found the target
       paymentToken,    // 'eth' | 'usdc' | 'bnkr'
+      // FarCaster Miniapp Auditor fields
+      persona,         // 'researcher' | 'developer' | 'contract_dev'
+      mode,           // 'self_audit' | 'research' | 'contract'
+      analysisType,   // 'contract' | 'frontend' | 'full_stack'
     } = body;
 
     // At least one target input required
@@ -154,6 +158,10 @@ export async function POST(request: NextRequest) {
       paymentTxHash,
       paymentAmount,
       paymentVerified,
+      // FarCaster Miniapp Auditor fields
+      persona,
+      mode,
+      analysisType,
     });
 
     // Sync to global store for audit worker

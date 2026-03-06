@@ -23,6 +23,10 @@ export type AuditType = 'contract_basic' | 'contract_deep' | 'miniapp' | 'full_s
 export type TargetType = 'contract_evm' | 'contract_solana' | 'github_repo' | 'miniapp_url'
 export type PaymentToken = 'eth' | 'usdc' | 'bnkr'
 
+export type Persona = 'researcher' | 'developer' | 'contract_dev'
+export type AuditMode = 'self_audit' | 'research' | 'contract'
+export type AnalysisType = 'contract' | 'frontend' | 'full_stack'
+
 export interface ResolvedTarget {
   type: TargetType
   value: string
@@ -44,6 +48,10 @@ export interface JobSession {
   resolvedTarget?: ResolvedTarget;
   discoveryTier?: 1 | 2 | 3;
   paymentToken?: PaymentToken;
+  // FarCaster Miniapp Auditor fields
+  persona?: Persona;
+  mode?: AuditMode;
+  analysisType?: AnalysisType;
   requestedByFid?: number;
   hexstrikeRequestId?: string;
   findings?: any[];
@@ -123,6 +131,18 @@ export interface AuditReport {
   verifications: VerificationResult[];
   evaluation: SelfEvaluation;
   createdAt: string;
+  // FarCaster Miniapp Auditor metadata
+  meta?: {
+    targetType?: string;
+    auditType?: string;
+    chain?: string;
+    paymentToken?: string;
+    requestedByFid?: number;
+    completedAt?: string;
+    mode?: string;
+    persona?: string;
+    analysisType?: string;
+  };
 }
 
 export interface PaymentVerificationResult {
