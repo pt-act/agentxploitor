@@ -1,0 +1,93 @@
+---
+title: Configuration
+description: Environment variables and configuration options
+---
+
+# Configuration
+
+Agentxploitor is configured via environment variables.
+
+## Database
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `POSTGRES_HOST` | Database host | localhost |
+| `POSTGRES_PORT` | Database port | 5432 |
+| `POSTGRES_DB` | Database name | agentxploitor |
+| `POSTGRES_USER` | Database user | agentxploitor |
+| `POSTGRES_PASSWORD` | Database password | - |
+
+## Redis
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `REDIS_HOST` | Redis host | localhost |
+| `REDIS_PORT` | Redis port | 6379 |
+| `REDIS_PASSWORD` | Redis password | - |
+| `REDIS_DB` | Redis database | 0 |
+
+## Agent Browser
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `AGENT_BROWSER_CLI` | Path to binary | `agent-browser/bin/agent-browser` |
+| `AGENT_BROWSER_SESSION` | Session name | default |
+
+## Security
+
+| Variable | Description |
+|----------|-------------|
+| `SECRET_KEY` | Secret key for JWT signing |
+| `JWT_EXPIRY_HOURS` | Token expiry hours |
+| `API_KEY_SECRET` | Secret for API key hashing |
+
+## Integrations
+
+### Immunefi
+
+```bash
+IMMUNEFI_API_KEY="your-key"
+IMMUNEFI_API_SECRET="your-secret"
+```
+
+### GitHub
+
+```bash
+GITHUB_APP_ID="your-app-id"
+GITHUB_PRIVATE_KEY="/path/to/private-key.pem"
+GITHUB_WEBHOOK_SECRET="your-secret"
+```
+
+## Observability
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP endpoint | - |
+| `PROMETHEUS_PORT` | Metrics port | 9090 |
+| `LOG_LEVEL` | Logging level | INFO |
+
+## Example .env
+
+```bash
+# Database
+POSTGRES_HOST=postgres
+POSTGRES_DB=agentxploitor
+POSTGRES_USER=agentxploitor
+POSTGRES_PASSWORD=secure-password
+
+# Redis
+REDIS_HOST=redis
+REDIS_PASSWORD=redis-password
+
+# Security
+SECRET_KEY=your-secret-key-min-32-chars
+JWT_EXPIRY_HOURS=24
+
+# Integrations
+IMMUNEFI_API_KEY=key
+GITHUB_APP_ID=12345
+```
+
+## Next Steps
+
+- [Security](/deployment/security) - Security configuration

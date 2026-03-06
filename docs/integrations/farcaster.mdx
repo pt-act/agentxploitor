@@ -1,0 +1,58 @@
+---
+title: Farcaster Integration
+description: Using AgentxploiTor natively inside Farcaster with Farcaster Quick Auth
+---
+
+# Farcaster Integration
+
+AgentxploiTor is built as a native Farcaster miniapp. Every audit is authenticated with your Farcaster identity — giving you verifiable attribution on every report you generate.
+
+## Authentication
+
+AgentxploiTor uses **Farcaster Quick Auth** — the standard authentication method for Farcaster miniapps. No separate account needed. Your Farcaster identity is your account.
+
+```
+Open AgentxploiTor in Farcaster
+        ↓
+Quick Auth: sign with your Farcaster account (one tap)
+        ↓
+JWT issued — valid for your session
+        ↓
+Your FID (Farcaster ID) is recorded on every audit you request
+```
+
+## Your FID on Every Report
+
+Every audit report generated through AgentxploiTor carries your Farcaster FID as immutable attribution:
+
+```
+Requested by: Farcaster FID [XXXX]
+Timestamp:    2026-03-04T09:00:00Z
+```
+
+This serves two purposes:
+
+1. **For you**: proof that you commissioned this independent audit — useful for responsible disclosure, community reporting, or portfolio documentation
+2. **For the ecosystem**: a verifiable, public record of who requested the audit — building trust in the registry over time
+
+## Responsible Disclosure via Farcaster
+
+When you audit a public miniapp in Research mode and find significant vulnerabilities, AgentxploiTor generates a responsible disclosure template pre-formatted for Farcaster:
+
+- Non-sensitive finding summary (severity, category, recommended fix)
+- Your FID as reporter attribution
+- Pre-filled Farcaster cast composer link — one click to notify the developer
+- Optional: direct Farcaster DM link to the miniapp creator (if their FID is resolvable)
+
+## Miniapp Target Discovery
+
+When you input a plain miniapp name, AgentxploiTor searches the Warpcast API for frames and miniapps matching that name — surfacing candidates for you to confirm before the audit begins. This means you can find and audit any Farcaster miniapp directly from within AgentxploiTor, without needing to know its URL.
+
+## Rate Limiting
+
+To protect the integrity of the audit queue, rate limits apply per FID:
+- Research mode (auditing others' apps): moderate limits
+- Self-audit mode (auditing your own app): generous limits
+- Contract audit mode: generous limits
+
+Rate limits reset daily. They exist to prevent abuse, not to restrict legitimate use.

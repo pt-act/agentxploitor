@@ -1,0 +1,87 @@
+{
+  "name": "AgentxploiTor",
+  "theme": {
+    "primaryColor": "#7c3aed",
+    "logo": {
+      "light": "/images/logo-light.svg",
+      "dark": "/images/logo-dark.svg"
+    },
+    "favicon": "/favicon.ico"
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "Capabilities",
+      "pages": [
+        "features/smart-contract-evaluation",
+        "features/miniapp-auditing",
+        "features/visual-verification",
+        "features/intelligence-layer",
+        "features/independence",
+        "features/autonomous-discovery",
+        "features/self-evaluation",
+        "features/autonomous-submission"
+      ]
+    },
+    {
+      "group": "The Agent Team",
+      "pages": [
+        "agents/overview",
+        "agents/hexstrike",
+        "agents/intelligence"
+      ]
+    },
+    {
+      "group": "Architecture",
+      "pages": [
+        "architecture/overview",
+        "architecture/infrastructure",
+        "architecture/security"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api/overview",
+        "api/agent",
+        "api/models"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations/farcaster",
+        "integrations/base",
+        "integrations/agent-browser",
+        "integrations/immunefi",
+        "integrations/github",
+        "integrations/webhooks"
+      ]
+    },
+    {
+      "group": "Developer Reference",
+      "pages": [
+        "developer/code-voyager-api",
+        "developer/simplemem-api",
+        "developer/hexstrike-memory-wiring"
+      ]
+    },
+    {
+      "group": "Deployment",
+      "pages": [
+        "deployment/setup",
+        "deployment/configuration",
+        "deployment/security"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/agentxploitor/agentxploitor"
+  }
+}

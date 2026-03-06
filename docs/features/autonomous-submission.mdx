@@ -1,0 +1,90 @@
+---
+title: Autonomous Submission
+description: Automatically submit findings to bug bounty platforms
+---
+
+# Autonomous Submission
+
+Agentxploitor can automatically submit verified findings to bug bounty platforms, completing the end-to-end automation cycle.
+
+## How It Works
+
+```python
+agent = AgentxploitorAgent(
+    browser_perception=True,
+    auto_submit=True  # Enable auto-submission
+)
+
+# After verification, findings are auto-submitted
+vulnerabilities = await agent.scan_target("https://target.com")
+exploit = await agent.generate_exploit(vulnerabilities[0])
+verification = await agent.verify_exploit(exploit)
+
+# Auto-submitted to configured platform
+print(f"Submitted: {verification.submission_id}")
+```
+
+## Supported Platforms
+
+| Platform | Integration |
+|----------|-------------|
+| **Immunefi** | Native API integration |
+| **HackerOne** | Coming soon |
+| **Bugcrowd** | Coming soon |
+
+## Submission Process
+
+1. **Qualification Check** - Does finding meet platform criteria?
+2. **Format Conversion** - Transform to platform's format
+3. **Proof Attachment** - Attach visual proof package
+4. **Submission** - Post to platform API
+5. **Confirmation** - Verify submission success
+
+## Manual Submission
+
+For review before submission:
+
+```python
+agent = AgentxploitorAgent(auto_submit=False)
+
+# Scan and verify
+finding = await agent.scan_and_verify("https://target.com")
+
+# Review the finding
+print(finding.title)
+print(finding.severity)
+print(finding.proof)
+
+# Submit manually
+if approval:
+    submission = await agent.submit_bounty(finding)
+```
+
+## Submission Result
+
+```python
+submission = await agent.submit_bounty(
+    finding=vulnerability,
+    proof=visual_proof,
+    platform="immunefi"
+)
+
+print(submission.id)          # "SUB-12345"
+print(submission.status)      # "submitted"
+print(submission.url)        # "https://immunefi.com/..."
+```
+
+## Configuration
+
+Set up platform credentials:
+
+```python
+# Environment variables
+IMMUNEFI_API_KEY="your-api-key"
+IMMUNEFI_API_SECRET="your-secret"
+```
+
+## Next Steps
+
+- [Integrations](/integrations/immunefi) - Platform details
+- [Architecture](/architecture/overview) - System design

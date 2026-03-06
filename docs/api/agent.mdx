@@ -1,0 +1,86 @@
+---
+title: Agent API
+description: Python agent reference
+---
+
+# Agent API
+
+The `AgentxploitorAgent` class is the main interface for running autonomous security audits.
+
+## Initialization
+
+```python
+from agentxploitor import AgentxploitorAgent
+
+agent = AgentxploitorAgent(
+    browser_perception=True,
+    auto_submit=False,
+    output_dir=None,
+    session_seed=None
+)
+```
+
+## Methods
+
+### scan_target
+
+```python
+vulnerabilities = await agent.scan_target(
+    url: str,
+    depth: str = "normal",  # "quick" | "normal" | "deep"
+    scan_types: list = None,
+    timeout: int = 300
+)
+```
+
+### generate_exploit
+
+```python
+exploit = await agent.generate_exploit(
+    vulnerability: Vulnerability,
+    technique: str = "auto"  # or specific technique
+)
+```
+
+### verify_exploit
+
+```python
+verification = await agent.verify_exploit(
+    exploit: Exploit,
+    capture_visual: bool = True
+)
+```
+
+### self_evaluate
+
+```python
+evaluation = await agent.self_evaluate(
+    perception: VisualPerception,
+    intent: str
+)
+```
+
+### submit_bounty
+
+```python
+submission = await agent.submit_bounty(
+    finding: Vulnerability,
+    proof: Verification,
+    platform: str = "immunefi"
+)
+```
+
+## Provider Factory
+
+```python
+from agentxploitor import create_perception_provider
+
+provider = create_perception_provider(
+    session_id="my-session",
+    use_mock=False  # Use real browser if available
+)
+```
+
+## Next Steps
+
+- [Models](/api/models) - Data model reference

@@ -1,0 +1,72 @@
+---
+title: API Overview
+description: Programmatic access to Agentxploitor
+---
+
+# API Overview
+
+Agentxploitor provides REST and GraphQL APIs for programmatic access.
+
+## REST API v2
+
+Base URL: `https://api.agentxploitor.com/v2`
+
+### Authentication
+
+Include API key in header:
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  https://api.agentxploitor.com/v2/jobs
+```
+
+### Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/jobs` | List jobs |
+| `POST` | `/jobs` | Create job |
+| `GET` | `/jobs/{id}` | Get job |
+| `GET` | `/findings` | List findings |
+| `GET` | `/findings/{id}` | Get finding |
+| `POST` | `/webhooks` | Create webhook |
+
+## GraphQL API
+
+Endpoint: `https://api.agentxploitor.com/graphql`
+
+```graphql
+query {
+  jobs(limit: 10) {
+    id
+    status
+    targetUrl
+    findings {
+      title
+      severity
+    }
+  }
+}
+```
+
+## WebSocket
+
+Real-time updates:
+
+```javascript
+const ws = new WebSocket('wss://api.agentxploitor.com/ws');
+
+ws.onmessage = (event) => {
+  const update = JSON.parse(event.data);
+  console.log(update.type, update.data);
+};
+```
+
+## SDK
+
+Python SDK coming soon.
+
+## Next Steps
+
+- [Agent API](/api/agent) - Python agent reference
+- [Models](/api/models) - Data models

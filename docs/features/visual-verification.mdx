@@ -1,0 +1,92 @@
+---
+title: Visual Exploit Verification
+description: Capture visual proof that exploits work
+---
+
+# Visual Exploit Verification
+
+Agentxploitor proves vulnerabilities are real by executing exploits and capturing visual proof of success.
+
+## How It Works
+
+```python
+# Generate an exploit for the vulnerability
+exploit = await agent.generate_exploit(vulnerability)
+
+# Execute and verify with visual proof
+verification = await agent.verify_exploit(
+    exploit,
+    capture_visual=True
+)
+```
+
+The verification process:
+
+1. **Pre-Exploit State** - Captures screenshot and DOM before execution
+2. **Exploit Execution** - Runs the exploit against the target
+3. **Post-Exploit State** - Captures screenshot and DOM after execution
+4. **Visual Comparison** - Calculates differences between states
+
+## Verification Result
+
+```python
+verification = await agent.verify_exploit(exploit)
+
+print(verification.success)           # True
+print(verification.visual_diff)       # 45.3 (percent changed)
+print(verification.proof_path)        # "/tmp/exploit-proof.png"
+print(verification.before_screenshot)  # base64 encoded
+print(verification.after_screenshot)   # base64 encoded
+```
+
+## Visual Diff
+
+The visual diff feature calculates how much the page changed:
+
+```python
+diff = await provider.visual_diff(
+    before="/tmp/before.png",
+    after="/tmp/after.png"
+)
+
+print(diff.significant)        # True (meaningful change)
+print(diff.percentage)         # 45.3%
+print(diff.changed_pixels)     # 125000
+```
+
+## Browser Interaction
+
+Agentxploitor uses agent-browser for automation:
+
+```python
+provider = create_perception_provider(session_id)
+
+await provider.navigate("https://target.com")
+await provider.click("#submit-button")
+await provider.fill_form({"amount": "1000000"})
+screenshot = await provider.screenshot()
+```
+
+## Verification Confidence
+
+The system calculates confidence based on:
+
+- Visual state changes
+- DOM mutations detected
+- Network request responses
+- Error state differences
+
+```python
+evaluation = await agent.self_evaluate(
+    perception=verification.after_state,
+    intent="Unauthorized withdrawal should succeed"
+)
+
+print(evaluation.confidence)    # 0.92
+print(evaluation.satisfactory)  # True
+```
+
+## Next Steps
+
+- [Self-Evaluation](/features/self-evaluation) - AI quality assurance
+- [Autonomous Submission](/features/autonomous-submission) - Auto-submit findings

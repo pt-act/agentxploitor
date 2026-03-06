@@ -1,0 +1,81 @@
+---
+title: Self-Evaluation
+description: AI evaluates its own work to ensure quality
+---
+
+# Self-Evaluation
+
+Agentxploitor doesn't just find vulnerabilities—it evaluates the quality of its own work to ensure findings are accurate and actionable.
+
+## How It Works
+
+After verification, the agent evaluates its findings:
+
+```python
+evaluation = await agent.self_evaluate(
+    perception=verification.after_state,
+    intent="Unauthorized withdrawal should succeed"
+)
+```
+
+The evaluation:
+
+1. **Intent Verification** - Did the exploit achieve the intended outcome?
+2. **Confidence Scoring** - How certain is the agent of the finding?
+3. **Evidence Collection** - What proof supports the finding?
+4. **Quality Assessment** - Is the finding actionable?
+
+## Evaluation Result
+
+```python
+print(evaluation.satisfactory)     # True
+print(evaluation.confidence)        # 0.92
+print(evaluation.issues)            # []
+print(evaluation.evidence)          # "Balance changed from 1000 to 0"
+print(evaluation.risk_score)        # 9.1
+```
+
+## Confidence Calculation
+
+Confidence decreases with:
+
+- Ambiguous visual changes
+- Incomplete verification data
+- Potential false positives
+- Edge cases in exploit
+
+Confidence increases with:
+
+- Clear visual proof
+- Consistent DOM changes
+- Verified state mutations
+- Multiple evidence sources
+
+## Self-Correction
+
+If self-evaluation finds issues, the agent can:
+
+```python
+# Retry with different approach
+if not evaluation.satisfactory:
+    # Try a different exploit technique
+    exploit = await agent.generate_exploit(
+        vulnerability,
+        technique="alternative"
+    )
+    verification = await agent.verify_exploit(exploit)
+```
+
+## Quality Metrics
+
+| Metric | Description |
+|--------|-------------|
+| **Confidence** | 0-1 score of finding reliability |
+| **Satisfactory** | Boolean if finding meets quality bar |
+| **Evidence** | Proof supporting the finding |
+| **Issues** | Potential concerns to note |
+
+## Next Steps
+
+- [Autonomous Submission](/features/autonomous-submission) - Auto-submit findings
+- [Architecture](/architecture/overview) - Understand the system

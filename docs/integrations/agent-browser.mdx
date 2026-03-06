@@ -1,0 +1,100 @@
+---
+title: Agent Browser
+description: Browser automation for visual verification
+---
+
+# Agent Browser
+
+Agentxploitor uses the agent-browser CLI for headless browser automation to capture visual proof of exploits.
+
+## Setup
+
+Agent-browser is included in the project at `agent-browser/`:
+
+```bash
+cd agent-browser
+npm install
+npx playwright install chromium
+```
+
+## Usage
+
+### Basic Commands
+
+```bash
+# Navigate to URL
+agent-browser open https://example.com
+
+# Take screenshot
+agent-browser screenshot
+
+# Get accessibility tree
+agent-browser snapshot
+
+# Click element
+agent-browser click "#submit-button"
+
+# Fill form
+agent-browser fill "#amount" "1000000"
+```
+
+### Python Integration
+
+```python
+from agentxploitor import create_perception_provider
+
+provider = create_perception_provider(session_id="my-session")
+
+# Navigate
+await provider.navigate("https://target.com")
+
+# Capture visual state
+perception = await provider.capture_perception()
+print(perception.url)
+print(perception.screenshot_base64)
+
+# Click and type
+await provider.click("#button")
+await provider.fill_form({"input": "value"})
+
+await provider.close()
+```
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `AGENT_BROWSER_CLI` | Path to binary | `agent-browser/bin/agent-browser` |
+| `AGENT_BROWSER_SESSION` | Session name | `default` |
+
+### Options
+
+```bash
+agent-browser --headed           # Show browser window
+agent-browser --full            # Full page screenshot
+agent-browser --json            # JSON output
+```
+
+## Visual Verification
+
+The browser captures:
+
+- Screenshots before/after exploit
+- Accessibility tree for DOM state
+- Console logs for errors
+- Network requests
+
+```python
+verification = await agent.verify_exploit(exploit)
+
+print(verification.before_screenshot)  # base64
+print(verification.after_screenshot)   # base64
+print(verification.visual_diff)       # percentage changed
+```
+
+## Next Steps
+
+- [Immunefi Integration](/integrations/immunefi) - Submit findings
+- [Webhooks](/integrations/webhooks) - Real-time notifications

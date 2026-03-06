@@ -1,0 +1,111 @@
+---
+title: GitHub Integration
+description: Integrate with GitHub for security workflows
+---
+
+# GitHub Integration
+
+Agentxploitor integrates with GitHub for security automation, including PR comments and check runs.
+
+## Setup
+
+Configure GitHub App credentials:
+
+```bash
+# Environment variables
+GITHUB_APP_ID="your-app-id"
+GITHUB_PRIVATE_KEY="path/to/private-key.pem"
+GITHUB_WEBHOOK_SECRET="your-webhook-secret"
+```
+
+## Usage
+
+```python
+from integrations.github import GitHubClient
+
+client = GitHubClient(
+    app_id=os.environ["GITHUB_APP_ID"],
+    private_key_path=os.environ["GITHUB_PRIVATE_KEY"]
+)
+```
+
+## Create Check Run
+
+Add security findings to PR as check runs:
+
+```python
+await client.create_check_run(
+    owner="acme",
+    repo="defi-protocol",
+    conclusion="failure",
+    output={
+        "title": "Security Scan Results",
+        "summary": "Found 3 vulnerabilities",
+        "annotations": [
+            {
+                "path": "contracts/Vault.sol",
+                "line": 142,
+                "annotation_level": "failure",
+                "message": "Unprotected withdraw function"
+            }
+        ]
+    }
+)
+```
+
+## Add PR Comment
+
+Comment on pull requests with findings:
+
+```python
+await client.create_comment(
+    owner="acme",
+    repo="defi-protocol",
+    issue_number=42,
+    body="""
+## Security Scan Results
+
+**Critical:** 1 | **High:** 2 | **Medium:** 0
+
+### Critical Finding
+- **Unprotected Function** (Vault.sol:142)
+- CVSS: 9.8
+- The withdraw function lacks access control
+
+### Remediation
+Add require(msg.sender == owner) to the withdraw function.
+    """
+)
+```
+
+## Webhook Handler
+
+Handle GitHub webhooks:
+
+```python
+from integrations.github import verify_webhook, GitHubWebhookEvent
+
+# Verify webhook signature
+event = verify_webhook(
+    payload=request.body,
+    signature=request.headers["X-Hub-Signature-256"]
+)
+
+if event.type == "pull_request":
+    await handle_pull_request(event)
+elif event.type == "push":
+    await handle_push(event)
+```
+
+## Supported Events
+
+| Event | Action |
+|-------|--------|
+| `pull_request` | Scan on PR |
+| `push` | Scan on commit |
+| `check_run` | Update check status |
+
+## Next Steps
+
+- [Webhooks](/integrations/webhooks) - Custom webhooks
+- [Deployment](/deployment/setup) - Deploy your instance

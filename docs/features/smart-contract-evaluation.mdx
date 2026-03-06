@@ -1,0 +1,109 @@
+---
+title: Smart Contract Evaluation
+description: Deep autonomous analysis of EVM and Solana smart contracts — powered by 12 specialist AI agents
+---
+
+# Smart Contract Evaluation
+
+AgentxploiTor performs deep, independent analysis of smart contracts across EVM-compatible chains and Solana — combining static analysis tools with 12 specialist AI agents that coordinate to find what single tools miss.
+
+## Supported Targets
+
+| Input Type | Example | Supported Chains |
+|-----------|---------|-----------------|
+| Contract address | `0x1234...abcd` | Base, Ethereum, Arbitrum, Optimism, Polygon, BSC |
+| Solana program address | `base58address` | Solana mainnet/devnet |
+| GitHub repo URL | `github.com/org/repo` | Any — detects `.sol` / `.rs` files automatically |
+
+## How It Works
+
+### 1. Source Resolution
+
+When you provide a contract address, AgentxploiTor fetches the verified source code via Basescan/Etherscan APIs. If the contract is unverified, bytecode analysis proceeds via Mythril. For GitHub repos, the system clones and detects all contract files automatically.
+
+### 2. Static Analysis Layer
+
+```
+Slither   → Control flow, data flow, inheritance analysis
+Mythril   → Symbolic execution, bytecode-level vulnerability detection
+```
+
+These run first — fast, deterministic, zero execution risk.
+
+### 3. The 12 HexStrike Agents
+
+After static analysis, HexStrike's specialist agents coordinate:
+
+| Agent | Role |
+|-------|------|
+| **IntelligentDecisionEngine** | Selects optimal analysis tools and sequencing for this specific contract |
+| **CVEIntelligenceManager** | Matches findings against known CVEs and published vulnerability databases |
+| **VulnerabilityCorrelator** | Discovers multi-step attack chains that individual findings miss |
+| **AIExploitGenerator** | Generates working proof-of-concept exploits in an isolated sandbox |
+| **BugBountyWorkflowManager** | Structures findings into professional, actionable reports |
+| **TechnologyDetector** | Identifies frameworks, patterns, and known risky implementations |
+| **ParameterOptimizer** | Tunes analysis depth based on contract complexity |
+| **PerformanceMonitor** | Tracks analysis quality and confidence throughout |
+| **FailureRecoverySystem** | Ensures analysis completes even under adverse conditions |
+| **GracefulDegradation** | Maintains partial results if any tool fails |
+| **RateLimitDetector** | Handles external API limits gracefully |
+| **PerformanceMonitor** | Validates final output quality |
+
+### 4. Compound Intelligence
+
+Because AgentxploiTor learns from every audit via SimpleMem and Code-Voyager:
+
+- **CVE matching improves** as more contracts are audited
+- **Attack chain patterns** are recognised faster over time
+- **Contract family detection** gets more accurate with experience
+- **For monitored contracts**: previous audit context is loaded automatically, focusing analysis on what changed
+
+## Vulnerability Categories Detected
+
+- Reentrancy (classic, cross-function, cross-contract)
+- Access control failures (missing modifiers, incorrect privilege checks)
+- Integer overflow/underflow
+- Flash loan attack vectors
+- Proxy upgrade risks (unprotected `upgradeTo`, storage collision)
+- Delegatecall vulnerabilities
+- Oracle manipulation
+- Front-running and sandwich attacks
+- Unchecked external calls
+- Self-destruct risks
+- Solana-specific: missing signer checks, account validation, CPI risks
+
+## Output
+
+Every smart contract evaluation produces:
+
+```
+Audit Report
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Target:          0x1234...abcd (Base)
+Chain:           Base Mainnet
+Source:          Verified (Basescan)
+Requested by:    FID 12345
+Timestamp:       2026-03-04T09:00:00Z
+Independence:    ✓ No affiliation with audited project
+
+Overall Severity: HIGH (2 critical, 1 high, 3 medium)
+
+Findings:
+  [CRITICAL] Reentrancy in withdraw()
+    Location: contracts/Vault.sol:142
+    CVE: CVE-2023-XXXX
+    Attack chain: flashloan → withdraw → reenter → drain
+    Confidence: 96%
+    Fix: Add ReentrancyGuard modifier
+
+  [HIGH] Unprotected proxy upgrade
+    Location: contracts/Proxy.sol:88
+    Confidence: 91%
+    Fix: Add onlyOwner to upgradeTo()
+
+Downloadable: JSON + Markdown
+```
+
+## Sandbox Isolation
+
+All dynamic analysis and exploit generation runs inside isolated E2B sandboxes. Your system is never at risk. The target contract is never touched on mainnet — analysis is read-only except in explicitly sandboxed test environments.

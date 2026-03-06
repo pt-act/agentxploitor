@@ -1,0 +1,88 @@
+---
+title: Architecture Overview
+description: System architecture and design
+---
+
+# Architecture Overview
+
+Agentxploitor uses a modular architecture combining AI agents, browser automation, and enterprise-grade infrastructure.
+
+## High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Agentxploitor Agent                      │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐  ┌─────────────────┐                │
+│  │ Security Core    │  │ Browser          │                │
+│  │ - Scanner       │  │ Automation       │                │
+│  │ - Exploit Gen   │  │ - Navigation     │                │
+│  │ - Risk Assessor │  │ - Verification  │                │
+│  └────────┬────────┘  └────────┬────────┘                │
+│           │                    │                          │
+│           └────────┬───────────┘                          │
+│                    ▼                                      │
+│  ┌─────────────────────────────────────────────┐          │
+│  │         Autonomous Workflow Engine           │          │
+│  │  1. Scan → 2. Generate → 3. Verify          │          │
+│  │  4. Evaluate → 5. Report → 6. Submit        │          │
+│  └─────────────────────────────────────────────┘          │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   Infrastructure Layer                       │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
+│  │ Redis    │  │ Postgres │  │ Observ-   │                 │
+│  │ Queue    │  │ Database │  │ ability   │                 │
+│  └──────────┘  └──────────┘  └──────────┘                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Core Components
+
+### Agent Core (`src/agentxploitor.py`)
+
+Main agent that orchestrates the workflow:
+
+- Initializes scanner and exploit generator
+- Manages browser perception
+- Coordinates the autonomous workflow
+- Handles error recovery
+
+### Security Modules (`src/`)
+
+| Module | Purpose |
+|--------|---------|
+| `analyzers.py` | Vulnerability detection |
+| `exploits.py` | Exploit generation |
+| `models.py` | Data models |
+| `ai/confidence.py` | Confidence scoring |
+| `ai/explainability.py` | Finding explanations |
+
+### Infrastructure (`src/infrastructure/`)
+
+| Module | Purpose |
+|--------|---------|
+| `redis_queue.py` | Job queue |
+| `database.py` | PostgreSQL connection |
+| `health.py` | Health checks |
+| `metrics.py` | Prometheus metrics |
+| `tracing.py` | OpenTelemetry tracing |
+
+## Data Flow
+
+1. **Job Submission** → Redis queue
+2. **Processing** → Worker picks up job
+3. **Scanning** → Analyzer identifies vulnerabilities
+4. **Exploitation** → Exploit generator creates proof
+5. **Verification** → Browser automation captures proof
+6. **Evaluation** → AI self-assesses quality
+7. **Storage** → PostgreSQL persists results
+8. **Submission** → Platform API receives findings
+
+## Next Steps
+
+- [Infrastructure Details](/architecture/infrastructure) - Deep dive into backend
+- [Security Architecture](/architecture/security) - Multi-tenancy and RBAC

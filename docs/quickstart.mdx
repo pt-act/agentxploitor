@@ -1,0 +1,131 @@
+---
+title: Quickstart
+description: Get Agentxploitor running in 5 minutes
+---
+
+# Quickstart
+
+This guide walks you through setting up Agentxploitor and running your first autonomous security audit.
+
+## Prerequisites
+
+- Python 3.12+
+- Node.js 18+ (for agent-browser)
+- PostgreSQL 14+
+- Redis 6+
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/pt-act/agentxploitor.git
+cd agentxploitor
+```
+
+### 2. Set Up Python Environment
+
+```bash
+python3.12 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 3. Install Agent Browser
+
+```bash
+cd agent-browser
+npm install
+npx playwright install chromium
+```
+
+### 4. Configure Environment
+
+```bash
+cp .env.example .env
+# Edit .env with your settings
+```
+
+Required environment variables:
+
+| Variable | Description |
+|----------|-------------|
+| `POSTGRES_HOST` | PostgreSQL host |
+| `POSTGRES_DB` | Database name |
+| `POSTGRES_USER` | Database user |
+| `POSTGRES_PASSWORD` | Database password |
+| `REDIS_HOST` | Redis host |
+
+### 5. Start Services
+
+```bash
+# Start PostgreSQL and Redis
+docker-compose up -d
+
+# Run migrations
+python -m src.infrastructure.migrations
+```
+
+## Running Your First Audit
+
+### Basic Scan
+
+```python
+import asyncio
+from agentxploitor import AgentxploitorAgent
+
+async def main():
+    agent = AgentxploitorAgent(browser_perception=True)
+    
+    # Scan a target
+    vulnerabilities = await agent.scan_target("https://example.com")
+    
+    print(f"Found {len(vulnerabilities)} vulnerabilities")
+    for vuln in vulnerabilities:
+        print(f"  - {vuln.title} (CVSS: {vuln.cvss_score})")
+
+asyncio.run(main())
+```
+
+### Full Workflow with Verification
+
+```python
+from agentxploitor import AgentxploitorAgent
+
+agent = AgentxploitorAgent(
+    browser_perception=True,
+    auto_submit=False
+)
+
+# 1. Discover vulnerabilities
+vulns = await agent.scan_target("https://target.com")
+
+# 2. Generate exploit
+critical = max(vulns, key=lambda v: v.cvss_score)
+exploit = await agent.generate_exploit(critical)
+
+# 3. Verify with visual proof
+verification = await agent.verify_exploit(exploit)
+
+if verification.success:
+    print(f"Exploit verified! Visual diff: {verification.visual_diff}%")
+```
+
+## Using the Demo
+
+```bash
+cd agentxploitor
+python examples/demo.py
+```
+
+The demo runs a complete workflow showing:
+- Vulnerability discovery
+- Exploit generation
+- Visual verification
+- Self-evaluation
+
+## Next Steps
+
+- [Core Features](/features/autonomous-discovery) - Learn about each capability
+- [Architecture](/architecture/overview) - Understand how it works
+- [Configuration](/deployment/configuration) - Customize your setup

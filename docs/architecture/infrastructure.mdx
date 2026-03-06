@@ -1,0 +1,84 @@
+---
+title: Infrastructure
+description: Backend infrastructure components
+---
+
+# Infrastructure
+
+Agentxploitor uses enterprise-grade infrastructure for reliability, scalability, and observability.
+
+## Components
+
+### Redis Queue
+
+Distributed job queue for async processing:
+
+```python
+from infrastructure.redis_queue import enqueue_job
+
+job_id = await enqueue_job(
+    job_type="scan",
+    target="https://example.com",
+    priority="high"
+)
+```
+
+Features:
+- Priority queuing
+- Job persistence
+- Retry logic
+- Circuit breaker
+
+### PostgreSQL Database
+
+Primary data store:
+
+```python
+from infrastructure.database import get_db_pool
+
+async with pool.acquire() as conn:
+    await conn.execute(
+        "INSERT INTO jobs VALUES ($1, $2)",
+        job.id, job.status
+    )
+```
+
+Features:
+- Connection pooling
+- Async support
+- Migrations
+
+### Health Checks
+
+System health monitoring:
+
+```python
+from infrastructure.health import HealthCheck
+
+health = await HealthCheck.check_all()
+print(health.status)  # "healthy"
+```
+
+### Metrics
+
+Prometheus metrics:
+
+```python
+from infrastructure.metrics import MetricsCollector
+
+metrics.record_scan(duration=1.5, findings=5)
+```
+
+## Configuration
+
+```python
+# Environment variables
+REDIS_HOST=localhost
+REDIS_PORT=6379
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+```
+
+## Next Steps
+
+- [Security](/architecture/security) - Authentication and authorization

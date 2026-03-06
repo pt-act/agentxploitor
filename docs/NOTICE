@@ -1,0 +1,43 @@
+# AgentxploiTor - Third-Party Attributions
+
+## Browser Automation
+
+This project includes the `agent-browser` codebase for browser automation, licensed under Apache 2.0:
+
+**agent-browser**  
+Copyright 2025 Vercel Inc.  
+Licensed under the Apache License, Version 2.0  
+https://github.com/vercel-labs/agent-browser
+
+The `agent-browser` source code is included in `agent-browser/` directory.
+See `agent-browser/LICENSE` for full Apache 2.0 license text.
+
+---
+
+## Node.js Dependencies
+
+The agent-browser includes the following dependencies:
+
+**playwright-core**  
+Copyright Microsoft Corporation  
+Licensed under Apache 2.0  
+https://github.com/microsoft/playwright
+
+**ws** (WebSocket library)  
+Licensed under MIT  
+https://github.com/websockets/ws
+
+**zod**  
+Licensed under MIT  
+https://github.com/colinhacks/zod
+
+---
+
+## Python Standard Library
+
+Standard Python libraries (asyncio, json, pathlib, etc.) are used under the 
+Python Software Foundation License, which is permissive and GPL-compatible.
+
+---
+
+All dependencies are compatible with MIT licensing and commercial use.

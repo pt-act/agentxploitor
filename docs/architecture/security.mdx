@@ -1,0 +1,81 @@
+---
+title: Security Architecture
+description: Multi-tenancy, RBAC, and audit logging
+---
+
+# Security Architecture
+
+Agentxploitor implements enterprise security with multi-tenancy, role-based access control, and comprehensive audit logging.
+
+## Multi-Tenancy
+
+Each workspace is isolated:
+
+```python
+from security.multi_tenancy import Workspace, WorkspaceContext
+
+workspace = Workspace(
+    name="Acme Corp",
+    slug="acme",
+    settings={"scan_quota": 100}
+)
+
+async with WorkspaceContext(workspace):
+    # Operations are workspace-scoped
+    vulnerabilities = await scan_target(url)
+```
+
+## Role-Based Access Control
+
+Defined roles with permissions:
+
+| Role | Permissions |
+|------|-------------|
+| **Admin** | Full access |
+| **Analyst** | Scan, view, comment |
+| **Viewer** | View only |
+| **API** | Programmatic access |
+
+```python
+from security.rbac import Permission
+
+user.has_permission(Permission.SCAN_CREATE)  # True
+user.has_permission(Permission.USER_MANAGE)  # False
+```
+
+## Audit Logging
+
+All actions are logged immutably:
+
+```python
+from security.audit_log import AuditLogger, AuditAction
+
+logger.log(
+    action=AuditAction.JOB_START,
+    resource_type="job",
+    resource_id=job.id,
+    actor_id=user.id
+)
+```
+
+Features:
+- Cryptographic hash chain
+- Tamper detection
+- Compliance export
+
+## API Key Authentication
+
+Programmatic access via API keys:
+
+```python
+from security.multi_tenancy import APIKey
+
+key = APIKey(
+    name="CI Pipeline",
+    scopes=[Permission.SCAN_CREATE, Permission.FINDING_VIEW]
+)
+```
+
+## Next Steps
+
+- [API Reference](/api/overview) - Programmatic access

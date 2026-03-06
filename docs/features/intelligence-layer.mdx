@@ -1,0 +1,156 @@
+---
+title: The Intelligence Layer
+description: How SimpleMem and Code-Voyager make AgentxploiTor smarter with every audit
+---
+
+# The Intelligence Layer
+
+AgentxploiTor is not a static tool that runs the same analysis every time. It is a living system that learns from experience, remembers what it has found, and autonomously improves its own capabilities. This is powered by two open-source, academically-grounded systems: **SimpleMem** and **Code-Voyager**.
+
+## SimpleMem — Persistent Audit Memory
+
+SimpleMem is an academic-grade memory architecture that gives AgentxploiTor persistent, queryable knowledge across sessions.
+
+**What gets stored after every audit:**
+- Target identity (contract address, URL, repo)
+- All findings with severity, location, and confidence scores
+- Tools and techniques used
+- Contract version (bytecode hash) at time of audit
+- Source code hash (when available)
+- Reporter Farcaster FID and timestamp
+
+**What this enables:**
+- Every new audit of the same target begins with full historical context
+- Semantic similarity search: "This contract matches patterns from 3 previous audits"
+- Delta analysis: "These findings are NEW since your last audit. These were present before."
+- Continuous monitoring: the system tracks what changed between contract versions
+
+## Code-Voyager — Self-Evolving Skills
+
+Code-Voyager is a university-research-grade system that mines audit transcripts and autonomously writes new skills — without any human intervention.
+
+**How it works:**
+
+```
+Audit completes
+    ↓
+Code-Voyager Skill Factory mines the transcript:
+  "I used this technique on this contract type"
+  "This access control pattern appears in Base contracts repeatedly"
+  "Proxy upgrade checks should run before reentrancy analysis"
+    ↓
+New SKILL files written autonomously
+    ↓
+Skills scored and refined across future audits
+    ↓
+Next similar audit: relevant skills retrieved and applied automatically
+```
+
+The agent writes its own improvement plan. We do not programme what it learns — it decides what is worth remembering from its own experience.
+
+## The Three-Layer Memory Stack
+
+```
+┌─────────────────────────────────────────────────┐
+│  SKILL LAYER (Code-Voyager)                     │
+│  "How to do things"                             │
+│  Exploit techniques, tool workflows, patterns   │
+│  Written by the agent · Refined over time       │
+├─────────────────────────────────────────────────┤
+│  FACT LAYER (SimpleMem)                         │
+│  "What happened when"                           │
+│  Specific findings · Contract states · Diffs    │
+│  Semantic search · Temporal reasoning           │
+├─────────────────────────────────────────────────┤
+│  CONTEXT LAYER (Code-Voyager Brain)             │
+│  "Current project state"                        │
+│  Goals · Decisions · Progress across sessions   │
+│  Injected at session start · Updated at end     │
+└─────────────────────────────────────────────────┘
+```
+
+## The Compound Intelligence Effect
+
+```
+Audit 1:    Foundational security knowledge applied
+Audit 100:  30+ Base-specific vulnerability patterns learned
+Audit 500:  Contract families recognised, likely issues predicted
+Audit 1000: Domain expertise no human team could replicate —
+            built from real audits, not theory
+```
+
+Every user who requests an audit contributes to the intelligence of every future audit. Early users help train the system. The system gets better for everyone, permanently.
+
+## What This Means for Continuous Monitoring
+
+The intelligence layer is what transforms monitoring from "run the same scan again" to "pick up exactly where we left off":
+
+```
+Subscriber: Protocol X, monitoring enabled
+
+First audit (Month 1):
+  → Audited cold. Findings stored in SimpleMem.
+  → Code-Voyager creates Skill: "Protocol X uses custom
+    access control — check modifier inheritance first."
+  → Brain updated: Protocol X profile stored.
+
+Contract update detected (Month 3):
+  → System loads full audit history for Protocol X
+  → Loads Protocol X brain context and custom skills
+  → Focuses analysis on what changed, not what was verified
+  → Finds: 1 critical vulnerability in the NEW code specifically
+  → Delta report: "This finding is NEW since your last audit."
+
+Contract update detected (Month 6):
+  → Two audits of history available
+  → Custom skill refined twice from real findings
+  → Audit faster and more precise than any fresh engagement
+```
+
+## Transparency — Glass Box, Not Black Box
+
+The intelligence layer is never hidden. Users see it working:
+
+```
+AgentxploiTor has completed 847 independent audits.
+It has learned 234 distinct vulnerability patterns.
+Your contract matches 3 previously audited patterns.
+Scanning for known issues first...
+```
+
+This is actual system state — visible and verifiable, not marketing copy.
+
+## The Transparency Display
+
+Because this is a glass-box system, users see the intelligence working in real time on the miniapp:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Live Intelligence Layer                            │
+│                                                     │
+│  847          312          234          Active       │
+│  Audits    Contracts   Patterns    Intelligence      │
+│  completed  analysed    learned       Layer          │
+│                                                     │
+│  The compound intelligence effect:                  │
+│  Audit 1 applies foundational knowledge.            │
+│  Audit 100 recognises 30+ chain-specific patterns.  │
+│  Audit 1000 predicts likely vulnerabilities before  │
+│  running full analysis. The moat grows with         │
+│  every job.                                         │
+└─────────────────────────────────────────────────────┘
+```
+
+This is actual system state — fetched live from the Python memory layer, not hardcoded.
+
+## Open Source Foundations
+
+Both SimpleMem and Code-Voyager are open-source systems built on academic and university research. They are leveraged and integrated as the intelligence substrate for AgentxploiTor — not proprietary black boxes. The intellectual work is in the synthesis: how they are wired together, what they are wired to, and the product vision that uses them as the foundation for independent security trust infrastructure.
+
+## Developer Reference
+
+For precise API signatures, integration examples, and gap analysis:
+
+- [Code-Voyager API Reference](/developer/code-voyager-api)
+- [SimpleMem API Reference](/developer/simplemem-api)
+- [HexStrike Memory Wiring Guide](/developer/hexstrike-memory-wiring)

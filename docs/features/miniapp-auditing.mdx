@@ -1,0 +1,96 @@
+---
+title: Miniapp Security Auditing
+description: Browser-based autonomous security auditing of Farcaster miniapps with visual proof
+---
+
+# Miniapp Security Auditing
+
+AgentxploiTor audits the frontend surface of Farcaster miniapps using a real browser — navigating, interacting, and capturing visual proof of every finding. Any smart contracts detected during the audit are automatically fed into the Smart Contract Evaluation pipeline.
+
+## What Gets Audited
+
+### Frontend Security Surface
+
+| Check | What it detects |
+|-------|----------------|
+| **Script source analysis** | External scripts loaded without integrity attributes (SRI) |
+| **Wallet connector inspection** | Suspicious or non-standard wallet connection implementations |
+| **iframe security** | Cross-origin iframes without proper sandboxing |
+| **XSS vectors** | DOM-based injection points, event handler risks |
+| **CSP headers** | Missing or weak Content Security Policy headers |
+| **Phishing indicators** | Misleading UI, fake approval dialogs, address spoofing |
+| **Network request analysis** | Suspicious external calls during wallet connect flow |
+| **Approval flow inspection** | Transaction approval screens that obscure real parameters |
+
+### Auto-Detected Contracts
+
+During browser navigation, AgentxploiTor extracts any contract addresses referenced in the miniapp's source code or network calls. These are automatically submitted to the Smart Contract Evaluation pipeline — giving you a full-stack audit from a single URL input.
+
+## Target Discovery
+
+If you don't have the exact URL, you can input the miniapp name. AgentxploiTor resolves it through a three-tier discovery process:
+
+```
+Plain name input: "SuperSwap"
+        ↓
+Tier 1: Search Warpcast API for frames/miniapps matching name
+        → Found? Show candidates → confirm → proceed
+        ↓ (not found)
+Tier 2: Search GitHub for matching public repositories
+        → Found? Show candidates → confirm → proceed
+        ↓ (not found)
+Tier 3: Ask for direct URL or contract address
+```
+
+You always confirm the resolved target before the audit begins.
+
+## Visual Proof
+
+Every finding includes visual proof — not just a description:
+
+```
+Finding: Missing Content Security Policy
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Before: [Screenshot — page loaded, CSP header absent]
+After:  [Screenshot — script injection demonstrated]
+Diff:   [Pixel-level highlighted diff showing change]
+```
+
+This is what makes AgentxploiTor unique. The agent does not just report — it demonstrates. Every finding is backed by evidence a developer can act on and an investigator can verify.
+
+## How the Browser Audit Works
+
+```
+URL confirmed
+    ↓
+agent-browser daemon: navigate to target in isolated session
+    ↓
+DOM inspection: analyse page structure, scripts, iframes
+    ↓
+Header analysis: check CSP, X-Frame-Options, CORS policy
+    ↓
+Wallet connect simulation: trigger connect flow, observe
+    ↓
+For each finding:
+  → Capture BEFORE screenshot
+  → Trigger finding condition
+  → Capture AFTER screenshot
+  → Generate pixel diff with highlighted regions
+    ↓
+Contract extraction: parse source + network calls for addresses
+    ↓
+Auto-submit detected contracts to Smart Contract Evaluation
+    ↓
+Unified report: UI findings + contract findings + all visual proof
+```
+
+## Responsible Disclosure
+
+When auditing a miniapp you did not build, AgentxploiTor generates a responsible disclosure template alongside your report:
+
+- Summary of findings (severity, category, non-exploitable description)
+- Recommended fixes
+- Your Farcaster FID as reporter attribution
+- Pre-filled Farcaster cast composer link for notifying the developer
+
+Only shown when audit mode is Research and findings are Medium severity or above.

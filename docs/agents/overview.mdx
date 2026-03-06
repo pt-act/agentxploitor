@@ -1,0 +1,84 @@
+---
+title: The Agent Team
+description: 19 specialist AI agents working in concert on every AgentxploiTor audit
+---
+
+# The Agent Team
+
+AgentxploiTor is not a tool. It is a coordinated team of 19 specialist AI agents — each with a defined role, persistent memory, and the ability to learn from experience. Every audit activates the right subset of agents for the job.
+
+## Two Teams, One Mission
+
+### Security Intelligence Team — HexStrike (12 agents)
+
+Deep security specialists. These agents coordinate on every audit to find what no single tool could find alone.
+
+| Agent | Specialisation |
+|-------|---------------|
+| **IntelligentDecisionEngine** | Tool selection and analysis sequencing — chooses the optimal approach for each specific contract |
+| **CVEIntelligenceManager** | Known vulnerability intelligence — matches findings against published CVE and vulnerability databases |
+| **VulnerabilityCorrelator** | Attack chain discovery — connects individual findings into multi-step attack paths |
+| **AIExploitGenerator** | Proof-of-concept generation — creates working exploits in an isolated sandbox |
+| **BugBountyWorkflowManager** | Report structuring — formats findings for professional disclosure and bounty submission |
+| **TechnologyDetector** | Framework and pattern identification — recognises known risky implementations |
+| **RateLimitDetector** | External API management — handles rate limits across chain explorers and APIs |
+| **FailureRecoverySystem** | Resilience — ensures audits complete even when individual tools fail |
+| **PerformanceMonitor** | Quality assurance — validates analysis depth and output quality throughout |
+| **ParameterOptimizer** | Context-aware tuning — adjusts analysis depth based on contract complexity |
+| **GracefulDegradation** | Fault tolerance — maintains partial results when components are unavailable |
+| **WorkflowCoordinator** | Agent orchestration — coordinates parallel analysis streams |
+
+### Intelligence & Context Team — CryptoAgents (7 agents)
+
+Domain specialists that provide the broader intelligence context which makes security findings more meaningful — understanding not just that a vulnerability exists, but what it means for users, capital flows, and protocol health.
+
+| Agent | Domain |
+|-------|--------|
+| **Security Agent** | Coordinates with HexStrike for deep security analysis |
+| **Compliance Agent** | Regulatory context — flags findings that create compliance exposure |
+| **DeFi Agent** | DeFi protocol patterns — understands yield, liquidity, and composability risks |
+| **Trading Agent** | Market mechanics — assesses findings for price manipulation potential |
+| **Market Making Agent** | Liquidity risks — evaluates findings for liquidity pool vulnerabilities |
+| **Arbitrage Agent** | Cross-protocol risks — identifies findings exploitable across protocols |
+| **NFT Analytics Agent** | NFT contract patterns — understands ERC-721/1155 specific vulnerabilities |
+
+## How Agents Coordinate
+
+```
+Audit request received
+        ↓
+IntelligentDecisionEngine: assess target, select agent subset
+        ↓
+Parallel analysis streams:
+  ├── CVEIntelligenceManager: known vulnerability matching
+  ├── TechnologyDetector: framework identification
+  └── Static tools: Slither + Mythril
+        ↓
+VulnerabilityCorrelator: connect findings into attack chains
+        ↓
+AIExploitGenerator: generate PoC for critical/high findings
+        ↓
+PerformanceMonitor: validate output quality
+        ↓
+BugBountyWorkflowManager: structure final report
+        ↓
+CryptoAgents context: add domain intelligence to findings
+        ↓
+Report delivered with independence declaration
+```
+
+## Persistent Memory Across Audits
+
+Every agent in both teams benefits from the intelligence layer:
+
+- **SimpleMem** stores what each agent found on past audits of this target
+- **Code-Voyager** gives agents access to skills they wrote from previous experience
+- **Project profiles** (for monitored targets) give agents full context on audit history
+
+An agent auditing a contract for the 5th time is incomparably more capable than one starting from scratch.
+
+## See Also
+
+- [HexStrike Security Team](/agents/hexstrike) — deep dive into the 12 security agents
+- [Intelligence Team](/agents/intelligence) — the 7 CryptoAgents and their domain expertise
+- [The Intelligence Layer](/features/intelligence-layer) — SimpleMem and Code-Voyager explained

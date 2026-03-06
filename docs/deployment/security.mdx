@@ -1,0 +1,129 @@
+---
+title: Security
+description: Security best practices for deployment
+---
+
+# Security
+
+Follow these security best practices when deploying Agentxploitor.
+
+## Pre-Deployment Checklist
+
+- [ ] Generate strong `SECRET_KEY` (32+ random bytes)
+- [ ] Use TLS/SSL for all connections
+- [ ] Configure firewall rules
+- [ ] Set up secrets management
+- [ ] Enable audit logging
+
+## Authentication
+
+### API Keys
+
+Rotate API keys regularly:
+
+```python
+# Create new API key
+key = await client.create_api_key(
+    name="Production CI",
+    scopes=[Permission.SCAN_CREATE, Permission.FINDING_VIEW],
+    expires_in_days=90
+)
+```
+
+### JWT Tokens
+
+Configure token expiry:
+
+```bash
+JWT_EXPIRY_HOURS=24  # Default: 24 hours
+```
+
+## Network Security
+
+### Firewall Rules
+
+Allow only necessary ports:
+
+```bash
+# Only allow API traffic
+ufw allow 443/tcp  # HTTPS
+ufw allow 22/tcp   # SSH
+ufw deny 3000/tcp  # Block direct API access
+```
+
+### Rate Limiting
+
+Configure rate limits:
+
+```python
+# Per-user rate limiting
+rate_limit:
+  requests_per_minute: 100
+  burst: 20
+```
+
+## Secrets Management
+
+### Never Commit Secrets
+
+```bash
+# Add to .gitignore
+.env
+*.pem
+*.key
+```
+
+### Use Secrets Manager
+
+```bash
+# Example: HashiCorp Vault
+vault read secret/agentxploitor/postgres-password
+```
+
+## Audit Logging
+
+All actions are logged:
+
+```bash
+# View audit logs
+curl -H "Authorization: Bearer $API_KEY" \
+  https://api.agentxploitor.com/v2/audit?user_id=user-123
+```
+
+## Compliance
+
+### Data Retention
+
+Configure retention policies:
+
+```python
+# Keep findings for 1 year
+retention:
+  findings: 365
+  logs: 90
+  screenshots: 30
+```
+
+### Export
+
+Export data for compliance:
+
+```python
+# Export all data
+await client.export_data(
+    format="json",
+    include_screenshots=True
+)
+```
+
+## Incident Response
+
+1. **Detect** - Monitor alerts
+2. **Contain** - Disable affected API keys
+3. **Investigate** - Review audit logs
+4. **Remediate** - Fix vulnerabilities
+5. **Document** - Record incident
+
+## Reporting Security Issues
+
+Contact: security@agentxploitor.com

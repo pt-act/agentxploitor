@@ -1,0 +1,94 @@
+---
+title: Immunefi Integration
+description: Submit findings to Immunefi bug bounty platform
+---
+
+# Immunefi Integration
+
+Agentxploitor can submit verified findings directly to Immunefi, the largest Web3 bug bounty platform.
+
+## Setup
+
+Configure Immunefi credentials:
+
+```bash
+# Environment variables
+IMMUNEFI_API_KEY="your-api-key"
+IMMUNEFI_API_SECRET="your-api-secret"
+```
+
+## Usage
+
+```python
+from integrations.immunefi import ImmunefiClient
+
+client = ImmunefiClient(
+    api_key=os.environ["IMMUNEFI_API_KEY"],
+    api_secret=os.environ["IMMUNEFI_API_SECRET"]
+)
+```
+
+## Submit Finding
+
+```python
+submission = await client.submit_finding(
+    project_id="your-project-id",
+    title="Unprotected withdraw function",
+    description="The withdraw function lacks access control...",
+    severity="critical",
+    affected_files=["Vault.sol"],
+    vulnerability_type="Access Control",
+    proof_of_concept="...",
+    impact="Attacker can drain all funds"
+)
+
+print(submission.id)  # Immunefi report ID
+print(submission.status)  # "submitted"
+```
+
+## Auto-Submission
+
+Enable auto-submission in the agent:
+
+```python
+agent = AgentxploitorAgent(
+    auto_submit=True,
+    platform="immunefi"
+)
+
+# Finding auto-submitted after verification
+vuln = await agent.scan_target("https://target.com")
+# Verified finding automatically sent to Immunefi
+```
+
+## Webhook Verification
+
+Immunefi sends webhook notifications for status updates:
+
+```python
+from integrations.immunefi import verify_webhook_signature
+
+# Verify webhook is authentic
+is_valid = verify_webhook_signature(
+    payload=request.body,
+    signature=request.headers["X-Signature"],
+    secret=os.environ["IMMUNEFI_WEBHOOK_SECRET"]
+)
+```
+
+## Supported Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `title` | Yes | Finding title |
+| `description` | Yes | Detailed description |
+| `severity` | Yes | critical/high/medium/low |
+| `affected_files` | Yes | Source files affected |
+| `vulnerability_type` | Yes | Type of vulnerability |
+| `proof_of_concept` | No | Exploit PoC |
+| `impact` | No | Business impact |
+
+## Next Steps
+
+- [GitHub Integration](/integrations/github) - GitHub integration
+- [Webhooks](/integrations/webhooks) - Custom webhooks

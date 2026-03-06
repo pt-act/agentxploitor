@@ -1,0 +1,63 @@
+---
+title: Base Chain Integration
+description: Payments and contract analysis on Base — AgentxploiTor's home chain
+---
+
+# Base Chain Integration
+
+AgentxploiTor is built natively on Base — Coinbase's L2 on Ethereum. Payments are processed on Base, and Base contracts receive first-class analysis support.
+
+## Payments on Base
+
+All audit payments are processed on Base chain using ETH or USDC — the most accessible tokens for the Farcaster and Base ecosystem.
+
+**Supported payment tokens:**
+- **ETH** on Base (primary)
+- **USDC** on Base (primary)
+- **BNKR** on Base — community token, 20% discount applied automatically
+
+**Payment flow:**
+```
+Select audit type → see price
+        ↓
+Pay with ETH/USDC/BNKR on Base
+        ↓
+Transaction verified on-chain (viem + Base RPC)
+        ↓
+Job queued → audit begins
+```
+
+No payment gateway. No credit card. No KYC. On-chain, verifiable, instant.
+
+## Base Contract Analysis
+
+Base contracts receive priority analysis with direct source code access via the Basescan API:
+
+```
+Contract address provided (Base)
+        ↓
+Basescan API: fetch verified source code
+        ↓
+If verified: full source analysis (Slither + Mythril + HexStrike)
+If unverified: bytecode analysis (Mythril symbolic execution)
+        ↓
+Base-specific checks:
+  - ERC-20/721/1155 compliance
+  - Bridge interaction patterns
+  - Coinbase Smart Wallet compatibility
+  - L2-specific gas patterns
+```
+
+## Base Ecosystem Context
+
+AgentxploiTor's intelligence layer has accumulated knowledge across the Base ecosystem. The more Base contracts that are audited, the more precise the Base-specific pattern recognition becomes — including:
+
+- Common Base DeFi protocol patterns
+- Known risky implementations seen on Base
+- Cross-protocol interaction risks specific to the Base ecosystem
+
+## BNKR Token
+
+BNKR is the community token that provides a 20% discount on all AgentxploiTor audits. It is not required — ETH and USDC are the primary payment methods. BNKR is a reward for community members, not a gate.
+
+Holding BNKR signals alignment with the AgentxploiTor community. As the platform grows, BNKR holders are the founding community who helped build the intelligence layer that benefits everyone.

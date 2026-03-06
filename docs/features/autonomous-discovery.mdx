@@ -1,0 +1,62 @@
+---
+title: Autonomous Discovery
+description: Automatically discover vulnerabilities without human intervention
+---
+
+# Autonomous Discovery
+
+Agentxploitor scans targets and identifies security vulnerabilities autonomously, without requiring human prompting for each step.
+
+## How It Works
+
+```python
+vulnerabilities = await agent.scan_target(
+    url="https://defi-protocol.example",
+    depth="deep"  # "quick" | "normal" | "deep"
+)
+```
+
+The scanner:
+
+1. **Reconnaissance** - Maps attack surface (endpoints, contracts, APIs)
+2. **Vulnerability Detection** - Identifies common and complex vulnerabilities
+3. **Risk Assessment** - Calculates CVSS scores and impact
+4. **Prioritization** - Ranks findings by severity
+
+## Supported Vulnerability Types
+
+| Category | Examples |
+|----------|----------|
+| **Smart Contract** | Reentrancy, access control, oracle manipulation |
+| **Web** | XSS, SQL injection, CSRF, SSRF |
+| **API** | Authentication bypass, rate limiting |
+| **Infrastructure** | Misconfigurations, exposed secrets```python
+from |
+
+## Output
+
+ models import Vulnerability
+
+vulnerability = vulnerabilities[0]
+print(vulnerability.title)           # "Unprotected Function"
+print(vulnerability.severity)        # "critical"
+print(vulnerability.cvss_score)     # 9.8
+print(vulnerability.description)     # "The withdraw function..."
+print(vulnerability.location)        # "Contract: Vault.sol:142"
+```
+
+## Configuration
+
+```python
+await agent.scan_target(
+    url="https://target.com",
+    depth="deep",
+    scan_types=["smart_contract", "web", "api"],
+    timeout=300
+)
+```
+
+## Next Steps
+
+- [Visual Verification](/features/visual-verification) - Prove exploits work
+- [Self-Evaluation](/features/self-evaluation) - Verify quality

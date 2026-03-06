@@ -1,0 +1,73 @@
+# Docker Compose for AgentxploiTor Development
+# Run: docker-compose up -d
+
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: agentxploitor-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: agentxploitor-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: agentxploitor
+      POSTGRES_PASSWORD: agentxploitor_dev_password
+      POSTGRES_DB: agentxploitor
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentxploitor -d agentxploitor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Redis Commander (Redis GUI)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: agentxploitor-redis-ui
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    depends_on:
+      - redis
+    profiles:
+      - ui
+
+  # Optional: pgAdmin (PostgreSQL GUI)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: agentxploitor-pgadmin
+    ports:
+      - "8082:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@agentxploitor.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    depends_on:
+      - postgres
+    profiles:
+      - ui
+
+volumes:
+  redis_data:
+  postgres_data:
+
+networks:
+  default:
+    name: agentxploitor-network

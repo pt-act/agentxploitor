@@ -1,0 +1,73 @@
+---
+title: Setup
+description: Deploy Agentxploitor in production
+---
+
+# Setup
+
+This guide covers deploying Agentxploitor in production.
+
+## Production Requirements
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| CPU | 2 cores | 4+ cores |
+| RAM | 4 GB | 8+ GB |
+| Disk | 20 GB | 100+ GB |
+| PostgreSQL | 14+ | 15+ |
+| Redis | 6+ | 7+ |
+
+## Deployment Options
+
+### Docker Compose
+
+```bash
+# Clone repository
+git clone https://github.com/agentxploitor/agentxploitor.git
+cd agentxploitor
+
+# Configure environment
+cp .env.example .env
+# Edit .env with production values
+
+# Start services
+docker-compose up -d
+```
+
+### Kubernetes
+
+```bash
+# Apply manifests
+kubectl apply -f kubernetes/
+```
+
+## Services
+
+| Service | Port | Description |
+|---------|------|-------------|
+| API | 3000 | REST/GraphQL API |
+| Worker | - | Background jobs |
+| Redis | 6379 | Queue |
+| Postgres | 5432 | Database |
+
+## Health Checks
+
+```bash
+# Check API health
+curl https://api.your-domain.com/health
+
+# Check worker status
+curl https://api.your-domain.com/health/worker
+```
+
+## Initial Setup
+
+1. Create admin user
+2. Configure workspace
+3. Set up API keys
+4. Configure integrations
+
+## Next Steps
+
+- [Configuration](/deployment/configuration) - Environment variables
+- [Security](/deployment/security) - Security hardening
