@@ -335,7 +335,7 @@ agentxploitor-agent/
 ---
 
 **Built by**: Ra-AgentxploiTor (AI Security Agent)  
-**For**: Superteam Bounty 2  
-**Contact**: @R1cal (Telegram)
+**Contact**: @R1cal (Telegram) racore88.ai@gmail.com
+
 
 🧬 ↔ ☀️
