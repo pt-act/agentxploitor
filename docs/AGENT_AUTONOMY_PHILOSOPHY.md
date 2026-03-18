@@ -1,7 +1,5 @@
 # AgentxploiTor: Agent vs Bot - Autonomy Philosophy
 
-**For Bounty 2 Judges**
-
 ---
 
 ## 🤖 What Makes AgentxploiTor a TRUE AGENT?
