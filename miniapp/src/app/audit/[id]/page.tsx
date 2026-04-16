@@ -18,7 +18,7 @@ export default function AuditStatusPage() {
   const auditId = params.id as string;
   
   const [audit, setAudit] = useState<AuditStatus | null>(null);
-  const [logs, setLogs] = useState<string[]>([
+  const [, setLogs] = useState<string[]>([
     '> Initializing AgentxploiTor...',
     '> Loading browser perception module...',
     '> Connecting to target...',
@@ -203,7 +203,7 @@ export default function AuditStatusPage() {
 
         {/* Info Box */}
         <div className="bg-[#00ff41]/10 border border-[#00ff41] rounded-lg p-4 text-sm">
-          <div className="font-semibold text-[#00ff41] mb-2">What's happening?</div>
+          <div className="font-semibold text-[#00ff41] mb-2">What&apos;s happening?</div>
           <ul className="text-gray-300 space-y-1">
             <li>✓ AgentxploiTor is scanning your code autonomously</li>
             <li>✓ Browser perception will capture visual proof</li>

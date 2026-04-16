@@ -52,6 +52,7 @@ export default function DisclosureTemplate({ auditId }: DisclosureTemplateProps)
 
   useEffect(() => {
     fetchDisclosure();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auditId]);
 
   const fetchDisclosure = async () => {
@@ -64,7 +65,7 @@ export default function DisclosureTemplate({ auditId }: DisclosureTemplateProps)
       } else {
         setDisclosure(data.disclosure);
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load disclosure');
     } finally {
       setLoading(false);

@@ -58,6 +58,7 @@ export function FindingCard({
         icon: '⚡',
       },
       LOW: {
+        bg: 'bg-blue-500/10',
         border: 'border-blue-500',
         text: 'text-blue-500',
         icon: '📝',

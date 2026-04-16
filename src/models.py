@@ -22,6 +22,13 @@ class Severity(str, Enum):
     LOW = "LOW"
     INFO = "INFO"
 
+    @classmethod
+    def _missing_(cls, value):
+        """Allow case-insensitive severity lookup (e.g., 'high' → HIGH)."""
+        if isinstance(value, str):
+            return cls(value.upper())
+        return None
+
 
 class JobStatus(str, Enum):
     QUEUED = "queued"

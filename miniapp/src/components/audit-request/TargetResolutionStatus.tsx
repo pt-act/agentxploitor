@@ -79,11 +79,11 @@ export default function TargetResolutionStatus({
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-white">Resolving Target</h3>
       <p className="text-sm text-gray-400">
-        Searching for "{rawInput}"
+        Searching for &ldquo;{rawInput}&rdquo;
       </p>
 
       <div className="space-y-3">
-        {RESOLUTION_STEPS.map((step, idx) => {
+        {RESOLUTION_STEPS.map((step) => {
           const status = getStepStatus(step.tier);
           return (
             <div

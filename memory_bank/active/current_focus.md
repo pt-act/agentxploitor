@@ -1,78 +1,91 @@
 # current_focus.md
 
-> Updated: 2026-03-06
+> Updated: 2026-03-25
 
-## Active Feature: FarCaster Miniapp Auditor
+## Session 6 Complete — Build + Test Fix Sprint ✅
 
-**Phase**: COMPLETE ✅ — PM-Auditor Verified
+All builds and test suites are green across both miniapp and Python backend.
 
-**Spec**: `specs/farcaster-miniapp-auditor/spec.md`
-**Tasks**: `specs/farcaster-miniapp-auditor/tasks.md`
-
----
-
-## Progress
-
-| Group | Focus | Status |
-|-------|-------|--------|
-| 1 | Target Input & Discovery | ✅ Complete |
-| 2 | Persona & Mode Selection UI | ✅ Complete |
-| 3 | Extend Audit Request API | ✅ Complete |
-| 4 | Contract Audit Pipeline | ✅ Complete |
-| 5 | Frontend UI Audit Pipeline | ✅ Complete |
-| 6 | Reasoning Stream Integration | ✅ Complete |
-| 7 | Responsible Disclosure | ✅ Complete |
-| 8 | Report Download & Export | ✅ Complete |
-| 9 | Integration Testing | ✅ Complete |
-
----
-
-## PM-Auditor 7-Gate Evaluation ✅
-
-All gates passed:
-- Gate 1: Functional Correctness ✅
-- Gate 2: Determinism & Reproducibility ✅
-- Gate 3: Observability ✅
-- Gate 4: Security & Access Control ✅
-- Gate 5: Documentation & Handoff ✅
-- Gate 6: Regression Protection ✅
-- Gate 7: Property-Based Validation ✅
-
----
-
-## Test Results
-
+### Test Suite Status
 | Suite | Tests | Status |
-|-------|-------|--------|
-| Security | 28 | ✅ |
-| PBT Properties | 17 | ✅ |
-| E2E Integration | 7 | ✅ |
-| Group 3 | 13 | ✅ |
-| Payment | 13 | ✅ |
-| **Total** | **78** | ✅ |
+|---|---|---|
+| Next.js Build | — | ✅ Clean |
+| ESLint | — | ✅ Zero errors |
+| npm audit | — | ✅ 0 vulnerabilities |
+| Vitest (miniapp) | 78/78 | ✅ |
+| Python pytest | 286/286 | ✅ (was 266/20 fail) |
+
+### Miniapp Build Fixes (Session 6)
+- `browser-auditor.ts` — Proper type parameters on `agentBrowserRequest<T>()` + `NonNullable` filtering
+- `next.config.ts` — `webpack.resolve.alias` stub for MetaMask SDK's `@react-native-async-storage/async-storage`
+- `package.json` — Removed `--turbo` from build script (webpack config must apply)
+- `chain-resolver.ts` — Simplified `target.type` access
+- `empty-module.js` — Stub module for MetaMask SDK
+- `FindingCard.tsx` — Added missing `bg` property for LOW severity
+- `ContractAuditView.tsx` — Removed unused `markdownReport` prop
+- `solana-client.ts` — Proper RPC response type interfaces + type parameters
+- `layout.tsx` — Added `metadataBase` for OG image resolution
+- `group3.test.ts` — `vi.mock` for QuickNode modules + `vi.clearAllMocks()`
+
+### Python Source Bug Fixes (Session 6)
+- `models.py` — `Severity._missing_()` for case-insensitive enum lookup
+- `approval.py` — Fixed `timedelta` expiration (was minute overflow bug)
+- `multi_tenancy.py` — Custom `rbac.PermissionError` instead of builtin
+
+### Python Test Fixes (Session 6)
+- `test_ai.py` — Filesystem payload assertion + auto-approve confidence values
+- `test_security.py` — `AuditLogger` mock returns entry via `side_effect`
+- `test_error_paths.py` — `ResourceNotFoundError` kwargs, circuit breaker `success_threshold`, saga `context` param
+- `test_pipeline.py` — Removed stale `JobSession` constructor fields
+- `test_concurrency.py` — Removed `asyncio.Lock` from optimistic locking test
+- `test_memory.py` — Fixed import paths (`from src.memory.` → `from memory.`)
 
 ---
 
-## Next Action
+## QuickNode Integration — All Groups Code Complete ✅
 
-All planned work complete. Ready for next feature.
+All QuickNode integration code is implemented. 6 of 10 endpoints active.
 
----
+### Blockchain Module
+```
+miniapp/src/lib/blockchain/
+├── quicknode-client.ts    # Multi-chain EVM RPC (Base, ETH, BSC, Polygon)
+├── state-analyzer.ts      # Proxy + admin detection
+├── transaction-tracer.ts  # Trace + reentrancy detection
+├── chain-monitor.ts       # WebSocket + contract watching
+└── solana-client.ts       # Solana RPC wrapper
+```
 
-## Previous Work
+### QuickNode Endpoints (6 of 10)
+| Endpoint | Chain | Status | Add-ons |
+|---|---|---|---|
+| `alpha-special-season` | Base | ✅ Active | MEV by Merkle |
+| `powerful-proportionate-sound` | Ethereum | ✅ Active | — |
+| `thrilling-small-hexagon` | BSC | ✅ Active | — |
+| `billowing-palpable-wish` | Polygon | ✅ Active | — |
+| `methodical-young-sponge` | Solana | ✅ Active | Priority Fees, Fastlane, MEV |
+| `cosmopolitan-alpha-rain` | Solana Devnet | ✅ Active | Priority Fees, Fastlane, MEV |
 
-### EntityHex Spec ✅ COMPLETE
+### UI Components
+- `OnChainStatePanel` — bytecode size, proxy pattern, admin display
+- `TraceVisualization` — call tree with reentrancy warnings
+- `SolanaAuditResult` — Solana-specific on-chain data display
 
-All groups complete with 24 tests passing:
-- PBT: 17 tests ✅
-- E2E: 7 tests ✅
+### Deployment
+- **Website:** agentxploitor.netlify.app (rebuilt with production OG images)
+- **Miniapp:** Farcaster miniapp on Base (ready for deployment)
 
-PM-Auditor 7-gate evaluation passed.
+### Previous Work
+- EntityHex Spec ✅ PM-Auditor 7-gate passed
+- Farcaster Miniapp Auditor ✅ 78 tests passing
 
-**GitHub**: https://github.com/pt-act/agentxploitor (private)
+## Next Actions
+1. Deploy miniapp to Farcaster
+2. Update website on Netlify
+3. Monitor first audit users
 
 ---
 
 ## Blockers
 
-None. All planned work complete.
+None. All planned work complete. All tests green.

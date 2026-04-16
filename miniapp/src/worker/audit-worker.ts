@@ -47,7 +47,7 @@ interface AuditJob {
   createdAt: string
   updatedAt: string
   hexstrikeRequestId?: string
-  findings?: any[]
+  findings?: Record<string, unknown>[]
   overallSeverity?: string
   confidenceScore?: number
   agentsUsed?: string[]
@@ -55,11 +55,33 @@ interface AuditJob {
   error?: string
 }
 
+interface HexStrikeEventData {
+  // Scan complete
+  findings?: Record<string, unknown>[]
+  overall_severity?: string
+  confidence_score?: number
+  agents_used?: string[]
+  tools_used?: string[]
+  finding_count?: number
+  message?: string
+  // Agent loaded / progress / warning
+  agent?: string
+  percent?: number
+  // Finding (streaming)
+  severity?: string
+  title?: string
+  description?: string
+  location?: string
+  confidence?: number
+  // Error
+  [key: string]: unknown
+}
+
 interface HexStrikeEvent {
   event: string
   request_id: string
   timestamp: string
-  data: Record<string, any>
+  data: HexStrikeEventData
 }
 
 // ── Job Store Interface ───────────────────────────────────────────────────
@@ -303,7 +325,7 @@ function handleHexStrikeEvent(
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-function buildHexStrikePayload(job: AuditJob): Record<string, any> {
+function buildHexStrikePayload(job: AuditJob): Record<string, unknown> {
   return {
     contract_address: job.contractAddress,
     blockchain: job.blockchain || detectChain(job.contractAddress),

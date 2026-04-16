@@ -5,6 +5,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Fix turbopack root inference in monorepo (multiple lockfiles detected)
+  turbo: {
+    root: '..',
+  },
 }
 
-module.exports = nextConfig
+export default nextConfig

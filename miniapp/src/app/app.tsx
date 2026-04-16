@@ -19,7 +19,7 @@ interface AuthResponse {
 }
 
 export default function App() {
-  const { isFrameReady, setFrameReady, context } = useMiniKit();
+  const { isFrameReady, setFrameReady } = useMiniKit();
 
   // Initialize the miniapp
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function App() {
   // this to meet your needs. See the /app/api/auth/route.ts file for more details.
   // Note: If you don't need to verify the user's identity, you can get their FID and other user data
   // via `context.user.fid`.
-  const { data: authData, isLoading: isAuthLoading, error: authError } = useQuickAuth<AuthResponse>(
+  useQuickAuth<AuthResponse>(
     "/api/auth",
     { method: "GET" }
   );

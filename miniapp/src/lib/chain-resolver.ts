@@ -2,13 +2,15 @@
  * chain-resolver.ts
  * Resolves audit targets to their source code / bytecode for analysis.
  *
- * Tier 1: EVM contract → Basescan/Etherscan verified source
- * Tier 2: Unverified EVM → bytecode only (Mythril handles it)
+ * Tier 1: EVM contract → QuickNode eth_getCode (bytecode) + Basescan verified source
+ * Tier 2: Unverified EVM → QuickNode bytecode only (Mythril handles it)
  * Tier 3: GitHub repo → .sol / .rs file list
  * Tier 4: Solana program → program account data
  */
 
 import { TargetType, ResolvedTarget } from './types';
+import { getBytecode, type SupportedChain } from './blockchain/quicknode-client';
+import { analyzeContractState } from './blockchain/state-analyzer';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -29,9 +31,17 @@ export interface ResolvedSource {
   sourceFiles?: Record<string, string>;   // filename → source code
   contractName?: string;
   compilerVersion?: string;
-  abi?: any[];
+  abi?: Record<string, unknown>[];
   // Bytecode
   bytecode?: string;
+  // On-chain state (from QuickNode)
+  onChainState?: {
+    bytecodeLength: number;
+    isProxy: boolean;
+    proxyType: string;
+    implementation: string | null;
+    admin: string | null;
+  };
   // GitHub
   repoUrl?: string;
   solFiles?: string[];                    // URLs to .sol / .rs files
@@ -50,7 +60,7 @@ export interface ResolvedSource {
 async function fetchVerifiedSource(
   address: string,
   chain: string
-): Promise<{ sourceFiles: Record<string, string>; contractName: string; compilerVersion: string; abi: any[] } | null> {
+): Promise<{ sourceFiles: Record<string, string>; contractName: string; compilerVersion: string; abi: Record<string, unknown>[] } | null> {
   const baseUrl = chain === 'base' ? BASESCAN_API : ETHERSCAN_API;
 
   try {
@@ -65,7 +75,7 @@ async function fetchVerifiedSource(
     if (!result.SourceCode || result.SourceCode === '') return null;
 
     // Parse source — can be single file or JSON blob (Hardhat/Foundry style)
-    let sourceFiles: Record<string, string> = {};
+    const sourceFiles: Record<string, string> = {};
     const raw = result.SourceCode as string;
 
     if (raw.startsWith('{{')) {
@@ -74,7 +84,7 @@ async function fetchVerifiedSource(
         const parsed = JSON.parse(raw.slice(1, -1));
         const sources = parsed.sources ?? parsed;
         for (const [filename, obj] of Object.entries(sources)) {
-          sourceFiles[filename] = (obj as any).content ?? '';
+          sourceFiles[filename] = (obj as Record<string, unknown>).content as string ?? '';
         }
       } catch {
         sourceFiles['contract.sol'] = raw;
@@ -84,7 +94,7 @@ async function fetchVerifiedSource(
       try {
         const parsed = JSON.parse(raw);
         for (const [filename, obj] of Object.entries(parsed)) {
-          sourceFiles[filename] = (obj as any).content ?? String(obj);
+          sourceFiles[filename] = (obj as Record<string, unknown>).content as string ?? String(obj);
         }
       } catch {
         sourceFiles['contract.sol'] = raw;
@@ -106,19 +116,7 @@ async function fetchVerifiedSource(
   }
 }
 
-async function fetchBytecode(address: string, chain: string): Promise<string | null> {
-  const baseUrl = chain === 'base' ? BASESCAN_API : ETHERSCAN_API;
-  try {
-    const url = `${baseUrl}?module=proxy&action=eth_getCode&address=${address}&tag=latest&apikey=${API_KEY}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(10_000) });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const code = data.result as string;
-    return code && code !== '0x' ? code : null;
-  } catch {
-    return null;
-  }
-}
+// fetchBytecode was replaced by QuickNode getBytecode() — removed
 
 export async function resolveEvmContract(
   address: string,
@@ -131,7 +129,21 @@ export async function resolveEvmContract(
     resolvedAt: new Date().toISOString(),
   };
 
-  // Try verified source first
+  // QuickNode: fetch bytecode + on-chain state (primary — rate-unlimited)
+  const [bytecode, stateAnalysis] = await Promise.all([
+    getBytecode(address as `0x${string}`, chain as SupportedChain),
+    analyzeContractState(address as `0x${string}`, chain as SupportedChain),
+  ]);
+
+  const onChainState = {
+    bytecodeLength: stateAnalysis.bytecodeLength,
+    isProxy: stateAnalysis.proxy.isProxy,
+    proxyType: stateAnalysis.proxy.proxyType,
+    implementation: stateAnalysis.proxy.implementation,
+    admin: stateAnalysis.admin.adminAddress ?? stateAnalysis.admin.ownerAddress,
+  };
+
+  // Basescan: try verified source (secondary — rate-limited)
   const verified = await fetchVerifiedSource(address, chain);
   if (verified) {
     return {
@@ -141,16 +153,18 @@ export async function resolveEvmContract(
       contractName: verified.contractName,
       compilerVersion: verified.compilerVersion,
       abi: verified.abi,
+      bytecode: bytecode ?? undefined,
+      onChainState,
       verified: true,
     } as ResolvedSource;
   }
 
-  // Fall back to bytecode
-  const bytecode = await fetchBytecode(address, chain);
+  // Bytecode only (from QuickNode — preferred over Basescan for bytecode)
   return {
     ...base,
     sourceType: 'bytecode_only',
     bytecode: bytecode ?? '0x',
+    onChainState,
     verified: false,
   } as ResolvedSource;
 }
@@ -195,8 +209,8 @@ export async function resolveGitHubRepo(repoUrl: string): Promise<ResolvedSource
     if (treeRes.ok) {
       const treeData = await treeRes.json();
       solFiles = (treeData.tree ?? [])
-        .filter((f: any) => f.type === 'blob' && (f.path?.endsWith('.sol') || f.path?.endsWith('.rs')))
-        .map((f: any) => `https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/${f.path}`)
+        .filter((f: Record<string, unknown>) => f.type === 'blob' && (String(f.path ?? '').endsWith('.sol') || String(f.path ?? '').endsWith('.rs')))
+        .map((f: Record<string, unknown>) => `https://raw.githubusercontent.com/${owner}/${repo}/${defaultBranch}/${String(f.path)}`)
         .slice(0, 50); // Cap at 50 files
     }
 
@@ -225,14 +239,25 @@ export async function resolveGitHubRepo(repoUrl: string): Promise<ResolvedSource
 
 // ─── Solana Program Resolution ────────────────────────────────────────────────
 
+import { getSolanaProgram as fetchSolanaProgram } from './blockchain/solana-client';
+
 export async function resolveSolanaProgram(programId: string): Promise<ResolvedSource> {
-  // Solana program accounts are not human-readable source — pass ID for HexStrike Solana path
+  // Fetch on-chain program data via QuickNode
+  const programInfo = await fetchSolanaProgram(programId);
+
   return {
     targetType: 'contract_solana',
     sourceType: 'solana_program',
     programId,
     chain: 'solana',
     verified: false,
+    onChainState: programInfo ? {
+      bytecodeLength: programInfo.dataSize,
+      isProxy: false,
+      proxyType: 'none',
+      implementation: null,
+      admin: programInfo.upgradeAuthority,
+    } : undefined,
     resolvedAt: new Date().toISOString(),
   };
 }
@@ -258,6 +283,6 @@ export async function resolveSource(target: ResolvedTarget): Promise<ResolvedSou
         resolvedAt: new Date().toISOString(),
       };
     default:
-      throw new Error(`Unsupported target type: ${(target as any).type}`);
+      throw new Error(`Unsupported target type: ${target.type}`);
   }
 }

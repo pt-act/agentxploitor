@@ -361,7 +361,8 @@ class TestAuditLogger:
     @pytest.fixture
     def audit_logger(self):
         mock_repo = MagicMock(spec=AuditLogRepository)
-        mock_repo.append = AsyncMock()
+        # append must return the entry passed to it (not a mock object)
+        mock_repo.append = AsyncMock(side_effect=lambda entry: entry)
         return AuditLogger(mock_repo)
     
     @pytest.mark.asyncio

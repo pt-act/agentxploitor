@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Errors, createClient } from '@farcaster/quick-auth';
+import { createClient } from '@farcaster/quick-auth';
 import { validateTargetUrl, generateSecureAuditId } from '~/lib/security';
 import { verifyBNKRPayment, PAYMENT_CONFIG } from '~/lib/payment';
 import { createJob, jobStore } from '~/lib/storage';
-import type { JobSession, Persona, AuditMode, AnalysisType } from '~/lib/types';
+import type { JobSession } from '~/lib/types';
 
 const client = createClient();
 

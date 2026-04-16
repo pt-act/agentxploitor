@@ -96,7 +96,7 @@ function createMockHexStrikeServer(port: number, scenario: 'success' | 'error' |
 
 // ── Test Helpers ──────────────────────────────────────────────────────────
 
-function makeJob(overrides: Partial<any> = {}): any {
+function makeJob(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     id: `job-${Math.random().toString(36).slice(2, 8)}`,
     contractAddress: '0xabcdef1234567890abcdef1234567890abcdef12',
@@ -124,14 +124,14 @@ describe('Group 1: Queue Worker + WebSocket Bridge', () => {
 
     const calls: string[] = []
     const originalFetch = global.fetch
-    global.fetch = vi.fn(async (url: string, opts: any) => {
+    global.fetch = vi.fn(async (url: string, opts: RequestInit) => {
       calls.push(url)
       // Proxy to mock server
       return originalFetch(
         url.replace('http://localhost:8000', `http://localhost:${MOCK_PORT}`),
         opts
       )
-    }) as any
+    }) as unknown as typeof global.fetch
 
     try {
       // Import worker with mock URL
@@ -225,7 +225,7 @@ describe('Group 1: Queue Worker + WebSocket Bridge', () => {
         const evt = JSON.parse(data)
         receivedEvents.push(evt.event)
       }),
-    } as any
+    } as unknown as WebSocket
 
     // Register mock client for this job
     global.__auditWsClients = new Map([[job.id, new Set([mockClient])]])

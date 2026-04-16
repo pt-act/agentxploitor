@@ -8,7 +8,7 @@ Ensures human oversight for critical decisions.
 import json
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, List, Callable
 from enum import Enum
 import uuid
@@ -175,10 +175,7 @@ class ApprovalWorkflow:
         request_id = f"approval-{uuid.uuid4().hex[:12]}"
         
         timeout = expires_in_minutes or self._default_timeout
-        expires_at = datetime.utcnow()
-        expires_at = expires_at.replace(
-            minute=expires_at.minute + timeout
-        )
+        expires_at = datetime.utcnow() + timedelta(minutes=timeout)
         
         request = ApprovalRequest(
             id=request_id,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import {
   useAccount,
   useSendTransaction,
@@ -48,7 +48,6 @@ const renderError = (error: Error | null): React.ReactElement | null => {
 export function WalletConnect() {
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const chainId = useChainId();
   const { connect } = useConnect();
   const [baseSignedIn, setBaseSignedIn] = useState(false);
 
@@ -91,16 +90,12 @@ export function WalletConnect() {
         )}
       </div>
 
-      {isConnected && address && chainId && (
+      {isConnected && address && (
         <div className="mt-4 p-4 bg-white border border-border rounded-xl">
           <div className="flex justify-between items-center text-sm">
             <div>
               <span className="text-muted-foreground">Address:</span>
               <div className="font-mono text-foreground mt-1">{truncateAddress(address)}</div>
-            </div>
-            <div className="text-right">
-              <span className="text-muted-foreground">Chain:</span>
-              <div className="font-mono text-foreground mt-1">{chainId}</div>
             </div>
           </div>
         </div>
@@ -206,7 +201,7 @@ export function SignSiweMessage() {
 }
 
 export function SendEth() {
-  const { isConnected, chainId } = useAccount();
+  const { isConnected } = useAccount();
   const {
     sendTransaction,
     data,

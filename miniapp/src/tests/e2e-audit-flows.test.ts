@@ -46,8 +46,8 @@ interface AuditJob {
   id: string;
   status: 'pending_payment' | 'payment_verified' | 'queued' | 'in_progress' | 'completed' | 'failed';
   request: AuditRequest;
-  findings: any[];
-  report?: any;
+  findings: Record<string, unknown>[];
+  report?: Record<string, unknown>;
 }
 
 // In-memory job store (would be KV in production)
@@ -125,8 +125,9 @@ describe('E2E: Audit Flows', () => {
       type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'INFO';
       const severityScores: Record<Severity, number> = { CRITICAL: 5, HIGH: 4, MEDIUM: 3, LOW: 2, INFO: 1 };
       const overallSeverity = job.findings.reduce<Severity>((max, f) => {
-        return severityScores[f.severity as Severity] > severityScores[max] ? f.severity as Severity : max;
-      }, 'INFO');
+        const fSev = (f as { severity: string }).severity as Severity;
+        return severityScores[fSev] > severityScores[max] ? fSev : max;
+      }, 'INFO' as Severity);
 
       job.report = {
         jobId: job.id,
@@ -234,7 +235,7 @@ describe('E2E: Audit Flows', () => {
   describe('Plain Name Discovery Flow (6.12)', () => {
     it('discovers and confirms miniapp target', async () => {
       // 1. Input: Plain name
-      const plainName = 'SuperSwap';
+      // 'SuperSwap' is the discovery target (used by mockCandidates below)
       
       // 2. Discovery (mock Warpcast API)
       const mockCandidates = [

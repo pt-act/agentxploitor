@@ -87,8 +87,8 @@ export function ReasoningStream({
           });
           
           onEvent?.(event);
-        } catch (e) {
-          console.error('Failed to parse reasoning event:', e);
+        } catch {
+          // Non-JSON message from WebSocket — ignore
         }
       };
 
@@ -108,7 +108,7 @@ export function ReasoningStream({
       };
 
       wsRef.current = ws;
-    } catch (e) {
+    } catch {
       setError('Failed to connect');
     }
   }, [auditId, onEvent]);
@@ -209,7 +209,7 @@ export function ReasoningStream({
           </div>
         )}
         
-        {filteredEvents.map((event, index) => (
+        {filteredEvents.map((event) => (
           <div
             key={event.id}
             className={`mb-2 ${getEventColor(event.type)}`}

@@ -3,7 +3,7 @@
 import AuditRequestForm, { AuditFormData } from '~/components/AuditRequestForm';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSendTransaction } from 'wagmi';
 import { parseEther, parseUnits } from 'viem';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -32,6 +32,7 @@ export default function RequestAuditPage() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
+  const { sendTransactionAsync } = useSendTransaction();
   const [pendingHash, setPendingHash] = useState<`0x${string}` | undefined>();
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -57,12 +58,12 @@ export default function RequestAuditPage() {
       // For now, we approximate: $1 = 0.0004 ETH (~$2500/ETH)
       if (formData.paymentToken === 'eth') {
         const ethAmount = (formData.priceUsd / 2500).toFixed(6);
-        txHash = await writeContractAsync({
-          address: AGENT_WALLET,
-          abi: [],
-          functionName: '',
+        // Use sendTransaction for direct ETH transfers (not writeContract)
+        const sendHash = await sendTransactionAsync({
+          to: AGENT_WALLET!,
           value: parseEther(ethAmount),
-        } as any);
+        });
+        txHash = sendHash;
       }
 
       // ── USDC payment ─────────────────────────────────────────────────────
@@ -127,9 +128,10 @@ export default function RequestAuditPage() {
         throw new Error(data.error ?? 'Failed to create audit job');
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Audit request error:', error);
-      alert(`Error: ${error?.message ?? 'Something went wrong. Please try again.'}`);
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      alert(`Error: ${message}`);
     }
   };
 

@@ -17,14 +17,30 @@ import {
 } from '../lib/report-builder';
 import { resolveEvmContract } from '../lib/chain-resolver';
 
+// Mock QuickNode modules so tests only exercise Basescan logic
+vi.mock('../lib/blockchain/quicknode-client', () => ({
+  getBytecode: vi.fn().mockResolvedValue('0x6080604052'),
+}));
+vi.mock('../lib/blockchain/state-analyzer', () => ({
+  analyzeContractState: vi.fn().mockResolvedValue({
+    bytecodeLength: 512,
+    proxy: { isProxy: false, proxyType: 'none', implementation: null, admin: null },
+    admin: { hasOwner: false, ownerAddress: null, isAdminSlot: false, adminAddress: null },
+    isContract: true,
+    chain: 'base',
+    analyzedAt: new Date().toISOString(),
+  }),
+}));
+
 // ─── T3.1: Source resolver — verified Solidity from Basescan ─────────────────
 
 describe('T3.1 chain-resolver: EVM contract source resolution', () => {
   beforeEach(() => {
-    vi.resetAllMocks();
+    vi.clearAllMocks();
   });
 
   it('returns verified_solidity when Basescan returns source code', async () => {
+    // Only mock Basescan fetch — QuickNode is mocked at module level
     global.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -36,7 +52,7 @@ describe('T3.1 chain-resolver: EVM contract source resolution', () => {
           ABI: '[]',
         }],
       }),
-    }) as any;
+    }) as unknown as typeof global.fetch;
 
     const result = await resolveEvmContract('0xabcdef1234567890abcdef1234567890abcdef12', 'base');
 
@@ -47,20 +63,14 @@ describe('T3.1 chain-resolver: EVM contract source resolution', () => {
   });
 
   it('falls back to bytecode_only when source is not verified', async () => {
-    // First call: source code API returns empty
-    global.fetch = vi.fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          status: '0',
-          result: [{ SourceCode: '' }],
-        }),
-      })
-      // Second call: bytecode API
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ result: '0x6080604052...' }),
-      }) as any;
+    // Only mock Basescan fetch — QuickNode bytecode comes from module mock
+    global.fetch = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        status: '0',
+        result: [{ SourceCode: '' }],
+      }),
+    }) as unknown as typeof global.fetch;
 
     const result = await resolveEvmContract('0xabcdef1234567890abcdef1234567890abcdef12', 'base');
 

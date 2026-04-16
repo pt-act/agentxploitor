@@ -1,7 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
 import Provider from '../components/providers/WagmiProvider';
 import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { ReactNode } from 'react';

@@ -54,7 +54,7 @@ export interface JobSession {
   analysisType?: AnalysisType;
   requestedByFid?: number;
   hexstrikeRequestId?: string;
-  findings?: any[];
+  findings?: Partial<Vulnerability>[];
   overallSeverity?: string;
   confidenceScore?: number;
   agentsUsed?: string[];

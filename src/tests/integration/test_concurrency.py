@@ -318,20 +318,20 @@ class TestDatabaseConcurrency:
         """Test optimistic locking for concurrent updates."""
         record = {'id': 1, 'version': 0, 'value': 'initial'}
         updates = []
-        lock = asyncio.Lock()
         
         async def update_record(new_value: str):
-            async with lock:
-                current_version = record['version']
-                
-                await asyncio.sleep(0.001)
-                
-                if record['version'] == current_version:
-                    record['value'] = new_value
-                    record['version'] += 1
-                    updates.append((new_value, True))
-                else:
-                    updates.append((new_value, False))
+            # Read version WITHOUT lock — simulates concurrent reads
+            current_version = record['version']
+            
+            await asyncio.sleep(0.001)
+            
+            # Only one task should succeed due to version check
+            if record['version'] == current_version:
+                record['value'] = new_value
+                record['version'] += 1
+                updates.append((new_value, True))
+            else:
+                updates.append((new_value, False))
         
         tasks = [
             update_record('update-1'),

@@ -18,9 +18,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.memory.audit_memory import AuditMemoryRecord, AuditMemoryStore, Finding
-from src.memory.project_profile import ProjectProfile, ProjectProfileStore
-from src.memory.session_hooks import AuditSessionManager, SessionContext
+from memory.audit_memory import AuditMemoryRecord, AuditMemoryStore, Finding
+from memory.project_profile import ProjectProfile, ProjectProfileStore
+from memory.session_hooks import AuditSessionManager, SessionContext
 
 
 # ── Fixtures ─────────────────────────────────────────────────────────────────

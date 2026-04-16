@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getJob } from '~/lib/storage';
-import type { JobSession, Severity } from '~/lib/types';
+import type { JobSession, Severity, Vulnerability } from '~/lib/types';
 
 /**
  * GET /api/disclosure/[id]
@@ -40,9 +40,9 @@ export async function GET(
     const severityOrder: Severity[] = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'INFO'];
     const minSeverityIndex = severityOrder.indexOf('MEDIUM');
     
-    const actionableFindings = findings.filter((finding: any) => {
+    const actionableFindings = findings.filter((finding: Partial<Vulnerability>) => {
       const findingSeverity = finding.severity || 'INFO';
-      return severityOrder.indexOf(findingSeverity) <= minSeverityIndex;
+      return severityOrder.indexOf(findingSeverity as Severity) <= minSeverityIndex;
     });
     
     if (actionableFindings.length === 0) {
@@ -79,13 +79,13 @@ export async function GET(
       
       // Findings summary
       findingsCount: {
-        critical: actionableFindings.filter((f: any) => f.severity === 'CRITICAL').length,
-        high: actionableFindings.filter((f: any) => f.severity === 'HIGH').length,
-        medium: actionableFindings.filter((f: any) => f.severity === 'MEDIUM').length,
+        critical: actionableFindings.filter((f: Partial<Vulnerability>) => f.severity === 'CRITICAL').length,
+        high: actionableFindings.filter((f: Partial<Vulnerability>) => f.severity === 'HIGH').length,
+        medium: actionableFindings.filter((f: Partial<Vulnerability>) => f.severity === 'MEDIUM').length,
       },
       
       // Detailed findings for disclosure
-      findings: actionableFindings.map((finding: any) => ({
+      findings: actionableFindings.map((finding: Partial<Vulnerability>) => ({
         id: finding.id,
         title: finding.title,
         severity: finding.severity,
@@ -122,7 +122,7 @@ export async function GET(
   }
 }
 
-function generateSummary(findings: any[]): string {
+function generateSummary(findings: Partial<Vulnerability>[]): string {
   const bySeverity = {
     critical: findings.filter(f => f.severity === 'CRITICAL').length,
     high: findings.filter(f => f.severity === 'HIGH').length,
@@ -143,7 +143,7 @@ function generateCastComposerUrl(summary: string, targetUrl: string): string {
   return `${baseUrl}?text=${text}`;
 }
 
-function generateFullTemplate(job: JobSession, findings: any[], timestamp: string): string {
+function generateFullTemplate(job: JobSession, findings: Partial<Vulnerability>[], timestamp: string): string {
   const lines = [
     '# Responsible Security Disclosure',
     '',

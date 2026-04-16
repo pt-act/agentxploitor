@@ -24,8 +24,6 @@ import { GetChainsAction } from "~/components/actions/get-chains";
 import { GetCapabilitiesAction } from "~/components/actions/get-capabilities";
 import { RequestCameraMicrophoneAction } from "~/components/actions/request-camera-microphone";
 import { HapticsAction } from "~/components/actions/haptics";
-import { useMiniKit } from "@coinbase/onchainkit/minikit";
-
 
 type TabType = "actions" | "context" | "wallet";
 type ActionPageType = "list" | "signin" | "quickauth" | "openurl" | "openminiapp" | "farcaster" | "viewprofile" | "viewtoken" | "swaptoken" | "sendtoken" | "viewcast" | "composecast" | "setprimarybutton" | "addminiapp" | "closeminiapp" | "runtime" | "requestcameramicrophone" | "haptics";

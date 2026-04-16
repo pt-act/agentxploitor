@@ -11,7 +11,7 @@
 
 // Inline types to avoid import errors
 type AuditType = 'contract_basic' | 'contract_deep' | 'miniapp' | 'full_stack';
-type PaymentToken = 'eth' | 'usdc' | 'bnkr';
+// PaymentToken type removed — not currently used
 type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'INFO';
 
 // Inline price constants (from AuditFormParts)
@@ -82,7 +82,7 @@ describe('PBT: Input Detection', () => {
   const validTypes = ['contract_evm', 'contract_solana', 'github_repo', 'miniapp_url', 'plain_name'];
 
   it('detects valid EVM address', () => {
-    expect(validTypes).toContain(detectInputType('0x742d35Cc6634C0532925a3b844Bc9e7595f0eB1'));
+    expect(validTypes).toContain(detectInputType('0x742d35Cc6634C0532925a3b844Bc9e7595f2bE1'));
   });
 
   it('detects valid GitHub URL', () => {
@@ -118,7 +118,7 @@ describe('PBT: SSRF Protection', () => {
       // Check for private IP ranges
       const parts = hostname.split('.');
       if (parts.length === 4) {
-        const [a, b, c, d] = parts.map(Number);
+        const [a, b] = parts.map(Number);
         
         // 10.0.0.0/8
         if (a === 10) return true;

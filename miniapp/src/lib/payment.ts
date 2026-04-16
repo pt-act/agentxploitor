@@ -25,13 +25,7 @@ interface PaymentVerificationResult {
   error?: string;
 }
 
-interface TransferEvent {
-  from: `0x${string}`;
-  to: `0x${string}`;
-  value: bigint;
-  transactionHash: `0x${string}`;
-  blockNumber: bigint;
-}
+// TransferEvent type removed — not currently used
 
 function getBaseClient() {
   return createPublicClient({

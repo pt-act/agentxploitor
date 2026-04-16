@@ -95,6 +95,7 @@ export default function VisualProofViewer({ proofs }: VisualProofViewerProps) {
           <div className="space-y-2">
             <div className="text-xs text-gray-500 uppercase tracking-wide">Before</div>
             <div className="border border-gray-800 rounded-lg overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`data:image/png;base64,${current.beforeScreenshot}`}
                 alt="Before"
@@ -105,6 +106,7 @@ export default function VisualProofViewer({ proofs }: VisualProofViewerProps) {
           <div className="space-y-2">
             <div className="text-xs text-gray-500 uppercase tracking-wide">After</div>
             <div className="border border-gray-800 rounded-lg overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`data:image/png;base64,${current.afterScreenshot}`}
                 alt="After"
@@ -117,6 +119,7 @@ export default function VisualProofViewer({ proofs }: VisualProofViewerProps) {
 
       {viewMode === 'before' && (
         <div className="border border-gray-800 rounded-lg overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`data:image/png;base64,${current.beforeScreenshot}`}
             alt="Before"
@@ -127,6 +130,7 @@ export default function VisualProofViewer({ proofs }: VisualProofViewerProps) {
 
       {viewMode === 'after' && (
         <div className="border border-gray-800 rounded-lg overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`data:image/png;base64,${current.afterScreenshot}`}
             alt="After"
@@ -138,6 +142,7 @@ export default function VisualProofViewer({ proofs }: VisualProofViewerProps) {
       {viewMode === 'diff' && (
         <div className="border border-gray-800 rounded-lg overflow-hidden">
           {current.diffScreenshot ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={`data:image/png;base64,${current.diffScreenshot}`}
               alt="Diff"

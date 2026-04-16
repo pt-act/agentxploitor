@@ -70,9 +70,6 @@ class TestFullPipeline:
         job = JobSession(
             id=job_data['id'],
             target_url=job_data['target_url'],
-            contract_address=job_data['contract_address'],
-            scope=job_data['scope'],
-            priority=job_data['priority'],
             wallet_address=job_data['wallet_address'],
             status=JobStatus.PENDING_PAYMENT,
         )

@@ -15,7 +15,6 @@ export default function AuditResultsPage() {
   const [report, setReport] = useState<AuditReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showDisclosure, setShowDisclosure] = useState(false);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -33,7 +32,7 @@ export default function AuditResultsPage() {
         }
         
         setReport(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load audit results');
       } finally {
         setLoading(false);

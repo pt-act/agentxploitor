@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { Button } from './ui/Button';
+import type { Vulnerability } from '~/lib/types';
 
 interface ReportDownloadProps {
   auditId: string;
   targetUrl: string;
-  findings: any[];
+  findings: Partial<Vulnerability>[];
   summary: Record<string, number>;
   confidence: number;
   createdAt: string;

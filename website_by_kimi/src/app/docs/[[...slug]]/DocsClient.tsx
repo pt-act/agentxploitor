@@ -193,9 +193,10 @@ function IntroductionContent() {
       </Section>
       <Section heading="Target Use Cases">
         <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-          <li><strong>DeFi Protocols:</strong> Smart contract security auditing</li>
+          <li><strong>DeFi Protocols:</strong> Smart contract security auditing (Base, Ethereum, BSC, Polygon, Solana)</li>
           <li><strong>NFT Projects:</strong> Minting and marketplace vulnerability detection</li>
           <li><strong>DAO Treasuries:</strong> Governance and fund protection</li>
+          <li><strong>Farcaster Miniapps:</strong> UI-based security auditing with visual proof</li>
           <li><strong>Bug Bounty:</strong> Autonomous submission to platforms like Immunefi</li>
         </ul>
       </Section>
@@ -209,18 +210,22 @@ function QuickstartContent() {
       <Section heading="Prerequisites">
         <ul className="list-disc list-inside space-y-2 text-muted-foreground mb-4">
           <li>Python 3.8+</li>
-          <li>Node.js (for agent-browser)</li>
+          <li>Node.js (for agent-browser and Farcaster miniapp)</li>
           <li>Git</li>
         </ul>
       </Section>
       <Section heading="Installation">
         <div className="rounded-lg bg-secondary/50 p-4 my-4 font-mono text-sm">
-          <div className="text-muted-foreground"># Navigate to project</div>
-          <div className="text-foreground">cd /Users/rna/Desktop/ECOSYSTEM/CryptoHexS-AI/bounty/agentxploitor</div>
-          <div className="text-muted-foreground mt-2"># Verify browser perception</div>
-          <div className="text-foreground">cd agent-browser</div>
-          <div className="text-foreground">python3 examples/test_basic.py</div>
-          <div className="text-green-400 mt-1"># Expected: 7/7 tests passing</div>
+          <div className="text-muted-foreground"># Clone the repository</div>
+          <div className="text-foreground">git clone https://github.com/agentxploitor/agentxploitor.git</div>
+          <div className="text-foreground">cd agentxploitor</div>
+          <div className="text-muted-foreground mt-2"># Install Python dependencies</div>
+          <div className="text-foreground">pip install -r requirements.txt</div>
+          <div className="text-muted-foreground mt-2"># Install miniapp dependencies</div>
+          <div className="text-foreground">cd miniapp &amp;&amp; npm install</div>
+          <div className="text-muted-foreground mt-2"># Copy environment config</div>
+          <div className="text-foreground">cp .env.example .env.local</div>
+          <div className="text-green-400 mt-1"># Fill in your API keys in .env.local</div>
         </div>
       </Section>
       <Section heading="Quick Demo (30 seconds)">
@@ -235,6 +240,18 @@ function QuickstartContent() {
           <div>✅ Verification: True/False</div>
           <div>   Visual proof: /tmp/agentxploitor-proof-VULN-001.png</div>
         </div>
+      </Section>
+      <Section heading="Farcaster Miniapp">
+        <div className="rounded-lg bg-secondary/50 p-4 my-4 font-mono text-sm">
+          <div className="text-muted-foreground"># Run the miniapp locally</div>
+          <div className="text-foreground">cd miniapp</div>
+          <div className="text-foreground">npm run dev</div>
+          <div className="text-green-400 mt-1"># Opens at http://localhost:3000</div>
+        </div>
+        <p className="text-muted-foreground">
+          The miniapp runs on Base chain and integrates with Farcaster for authentication. 
+          Users can request audits directly from their Farcaster feed.
+        </p>
       </Section>
       <Section heading="Basic Usage">
         <div className="rounded-lg bg-secondary/50 p-4 my-4 font-mono text-sm overflow-x-auto">
@@ -654,70 +671,41 @@ function FinalStatusContent() {
         <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-4 my-4">
           <div className="font-semibold text-green-400 mb-2">✅ PRODUCTION READY</div>
           <p className="text-sm text-muted-foreground">
-            Estimated Score: 95/100 for Bounty 2 submission
+            AgentxploiTor is deployed as a Farcaster miniapp on Base chain. 
+            Multi-chain QuickNode integration complete.
           </p>
         </div>
         <h4 className="font-semibold mb-2">Completed Components</h4>
         <ul className="space-y-2 text-muted-foreground">
           <li className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-400" />
-            Agentxploitor core (450 lines Python)
+            Farcaster miniapp (Next.js 15, Base chain)
           </li>
           <li className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-400" />
-            Browser Perception integrated
+            QuickNode multi-chain integration (Base, ETH, BSC, Polygon, Solana)
           </li>
           <li className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-400" />
-            Visual exploit verification working
+            On-chain state analysis (proxy detection, admin roles, bytecode verification)
           </li>
           <li className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-400" />
-            Solana-specific demo created
+            Transaction tracing (reentrancy detection, exploit path reconstruction)
           </li>
           <li className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-400" />
-            MIT LICENSE with attributions
+            Browser Perception integrated (visual exploit verification)
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-400" />
+            HexStrike 12-agent security pipeline
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-400" />
+            Marketing website (agentxploitor.netlify.app)
           </li>
         </ul>
-      </Section>
-      <Section heading="Criteria Compliance">
-        <div className="rounded-lg border border-border overflow-hidden my-4">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/50">
-              <tr>
-                <th className="px-4 py-2 text-left">Criteria</th>
-                <th className="px-4 py-2 text-center">Score</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              <tr>
-                <td className="px-4 py-2">Autonomy</td>
-                <td className="px-4 py-2 text-center text-accent font-semibold">9.5/10</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2">Originality</td>
-                <td className="px-4 py-2 text-center text-accent font-semibold">10/10</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2">Quality</td>
-                <td className="px-4 py-2 text-center text-accent font-semibold">8.5/10</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2">Solana Use</td>
-                <td className="px-4 py-2 text-center text-accent font-semibold">9.5/10</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2">Clarity</td>
-                <td className="px-4 py-2 text-center text-accent font-semibold">9/10</td>
-              </tr>
-              <tr className="bg-accent/10">
-                <td className="px-4 py-2 font-semibold">Total</td>
-                <td className="px-4 py-2 text-center text-accent font-bold">46.5/50</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </Section>
     </>
   )
@@ -730,29 +718,34 @@ function ArchitectureContent() {
         <div className="rounded-lg bg-secondary/30 p-4 my-4 font-mono text-xs overflow-x-auto">
           <pre>{`
 ┌─────────────────────────────────────────────────────────────┐
-│                    AgentxploiTor Agent                      │
+│              AgentxploiTor — Farcaster Miniapp              │
 │  ┌───────────────────────────────────────────────────────┐  │
 │  │         Security Intelligence Core                    │  │
-│  │  • Vulnerability scanner                              │  │
-│  │  • Exploit generator                                  │  │
-│  │  • Risk assessor                                      │  │
+│  │  • Vulnerability scanner (Slither + Mythril)          │  │
+│  │  • Exploit generator (HexStrike 12 agents)            │  │
+│  │  • Risk assessor (CVE matching + scoring)             │  │
 │  └──────────────────┬────────────────────────────────────┘  │
 │                     │                                       │
-│                     ▼                                       │
-│  ┌───────────────────────────────────────────────────────┐  │
+│  ┌──────────────────┴────────────────────────────────────┐  │
+│  │         On-Chain Data Layer (QuickNode)               │  │
+│  │  • Bytecode fetch via eth_getCode                     │  │
+│  │  • State analysis via eth_getStorageAt                │  │
+│  │  • Transaction tracing via debug_traceTransaction     │  │
+│  │  • Multi-chain: Base, ETH, BSC, Polygon, Solana       │  │
+│  └──────────────────┬────────────────────────────────────┘  │
+│                     │                                       │
+│  ┌──────────────────┴────────────────────────────────────┐  │
 │  │         Browser Perception Skill                      │  │
-│  │  • Navigate to targets                                │  │
-│  │  • Capture screenshots                                │  │
+│  │  • Navigate to targets (miniapp auditing)             │  │
+│  │  • Capture screenshots (visual proof)                 │  │
 │  │  • Extract DOM/accessibility tree                     │  │
-│  │  • Click & interact                                   │  │
 │  │  • Visual state comparison                            │  │
 │  └──────────────────┬────────────────────────────────────┘  │
 │                     │                                       │
-│                     ▼                                       │
-│  ┌───────────────────────────────────────────────────────┐  │
+│  ┌──────────────────┴────────────────────────────────────┐  │
 │  │         Autonomous Workflow Engine                    │  │
 │  │  1. Scan → 2. Discover → 3. Exploit                   │  │
-│  │  4. Verify → 5. Evaluate → 6. Submit                  │  │
+│  │  4. Verify → 5. Evaluate → 6. Report                  │  │
 │  └───────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
           `}</pre>
@@ -762,20 +755,68 @@ function ArchitectureContent() {
         <div className="grid gap-4 sm:grid-cols-2 my-4">
           <div className="rounded-lg border border-border bg-secondary/20 p-4">
             <div className="font-semibold text-accent mb-1">Security Intelligence Core</div>
-            <p className="text-sm text-muted-foreground">Vulnerability scanning, exploit generation, risk assessment</p>
+            <p className="text-sm text-muted-foreground">HexStrike 12-agent pipeline: Slither, Mythril, CVE matching, attack chain discovery</p>
+          </div>
+          <div className="rounded-lg border border-border bg-secondary/20 p-4">
+            <div className="font-semibold text-accent mb-1">On-Chain Data Layer</div>
+            <p className="text-sm text-muted-foreground">QuickNode RPC: bytecode fetching, state analysis, proxy detection, transaction tracing</p>
           </div>
           <div className="rounded-lg border border-border bg-secondary/20 p-4">
             <div className="font-semibold text-accent mb-1">Browser Perception</div>
-            <p className="text-sm text-muted-foreground">Navigation, screenshots, DOM extraction, interaction</p>
+            <p className="text-sm text-muted-foreground">Navigation, screenshots, DOM extraction, visual exploit verification</p>
           </div>
           <div className="rounded-lg border border-border bg-secondary/20 p-4">
-            <div className="font-semibold text-accent mb-1">Workflow Engine</div>
-            <p className="text-sm text-muted-foreground">Orchestrates the 6-step autonomous process</p>
+            <div className="font-semibold text-accent mb-1">Multi-Chain Support</div>
+            <p className="text-sm text-muted-foreground">Base, Ethereum, BSC, Polygon (EVM) + Solana programs</p>
           </div>
           <div className="rounded-lg border border-border bg-secondary/20 p-4">
-            <div className="font-semibold text-accent mb-1">Self-Evaluation</div>
-            <p className="text-sm text-muted-foreground">AI judges success with confidence scoring</p>
+            <div className="font-semibold text-accent mb-1">Farcaster Integration</div>
+            <p className="text-sm text-muted-foreground">Native miniapp with Quick Auth, wallet connect, Base payments</p>
           </div>
+          <div className="rounded-lg border border-border bg-secondary/20 p-4">
+            <div className="font-semibold text-accent mb-1">Self-Evolving Intelligence</div>
+            <p className="text-sm text-muted-foreground">SimpleMem stores findings. Code-Voyager writes new skills autonomously.</p>
+          </div>
+        </div>
+      </Section>
+      <Section heading="Supported Chains">
+        <div className="rounded-lg border border-border overflow-hidden my-4">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/50">
+              <tr>
+                <th className="px-4 py-2 text-left">Chain</th>
+                <th className="px-4 py-2 text-center">Status</th>
+                <th className="px-4 py-2 text-left">Capabilities</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="px-4 py-2">Base</td>
+                <td className="px-4 py-2 text-center"><span className="text-green-400">✓ Live</span></td>
+                <td className="px-4 py-2 text-muted-foreground">Full audit + payments</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2">Ethereum</td>
+                <td className="px-4 py-2 text-center"><span className="text-green-400">✓ Live</span></td>
+                <td className="px-4 py-2 text-muted-foreground">Full audit</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2">BSC</td>
+                <td className="px-4 py-2 text-center"><span className="text-green-400">✓ Live</span></td>
+                <td className="px-4 py-2 text-muted-foreground">Full audit</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2">Polygon</td>
+                <td className="px-4 py-2 text-center"><span className="text-green-400">✓ Live</span></td>
+                <td className="px-4 py-2 text-muted-foreground">Full audit</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2">Solana</td>
+                <td className="px-4 py-2 text-center"><span className="text-yellow-400">⚠ Beta</span></td>
+                <td className="px-4 py-2 text-muted-foreground">Program analysis (static + on-chain)</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </Section>
     </>

@@ -293,7 +293,8 @@ class WorkspaceContext:
     def require_permission(self, permission: str) -> None:
         """Require permission, raise if not available."""
         if not self.check_permission(permission):
-            raise PermissionError(f"Permission denied: {permission}")
+            from security.rbac import PermissionError as RBACPermissionError
+            raise RBACPermissionError(permission)
 
 
 # ============================================================================

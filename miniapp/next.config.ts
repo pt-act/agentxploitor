@@ -1,7 +1,17 @@
 import type { NextConfig } from "next";
+import path from 'path';
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  serverExternalPackages: ['@metamask/sdk', 'pino'],
+  webpack: (config) => {
+    // MetaMask SDK incorrectly imports react-native-async-storage in browser bundles
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@react-native-async-storage/async-storage': path.resolve(__dirname, 'empty-module.js'),
+    };
+    return config;
+  },
   async headers() {
     return [
       {

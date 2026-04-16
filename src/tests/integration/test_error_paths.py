@@ -53,7 +53,7 @@ class TestExceptionHandlers:
     
     def test_resource_not_found_error(self):
         """Test resource not found error."""
-        error = ResourceNotFoundError("Job", job_id="job-001")
+        error = ResourceNotFoundError("Job", resource_id="job-001")
         
         assert "Job" in str(error)
         assert "not found" in str(error).lower()
@@ -102,7 +102,7 @@ class TestCircuitBreakerErrors:
     @pytest.mark.asyncio
     async def test_circuit_half_open_recovery(self):
         """Test circuit recovers through half-open state."""
-        config = CircuitBreakerConfig(failure_threshold=2, recovery_timeout=0.1)
+        config = CircuitBreakerConfig(failure_threshold=2, recovery_timeout=0.1, success_threshold=1)
         breaker = CircuitBreaker('test', config)
         
         async def failing_call():
@@ -159,13 +159,13 @@ class TestSagaCompensation:
         """Test saga executes compensation on failure."""
         executed = []
         
-        async def step1():
+        async def step1(context):
             executed.append('step1')
         
         async def compensate1():
             executed.append('compensate1')
         
-        async def step2():
+        async def step2(context):
             executed.append('step2')
             raise Exception("Step 2 failed")
         
@@ -191,16 +191,16 @@ class TestSagaCompensation:
         """Test saga ensures all-or-nothing semantics."""
         executed = []
         
-        async def step1():
+        async def step1(context):
             executed.append('step1')
         
         async def compensate1():
             executed.append('compensate1')
         
-        async def step2():
+        async def step2(context):
             executed.append('step2')
         
-        async def step3():
+        async def step3(context):
             executed.append('step3')
             raise Exception("Step 3 failed")
         

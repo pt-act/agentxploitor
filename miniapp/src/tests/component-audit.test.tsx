@@ -17,12 +17,12 @@ describe('Component Size Audit', () => {
   const componentFiles = fs.readdirSync(COMPONENTS_DIR)
     .filter(f => f.endsWith('.tsx'))
     .filter(f => !f.includes('.test.') && !f.includes('.spec.'));
-  
+
   for (const file of componentFiles) {
     const filePath = path.join(COMPONENTS_DIR, file);
     const content = fs.readFileSync(filePath, 'utf-8');
     const lineCount = content.split('\n').length;
-    
+
     it(`${file} is under ${MAX_LINES} lines`, () => {
       expect(lineCount).toBeLessThanOrEqual(MAX_LINES);
     });
@@ -38,7 +38,7 @@ describe('Component Audit Summary', () => {
     console.log('\n📊 Component Size Audit:');
     console.log('─'.repeat(50));
     
-    let oversized: string[] = [];
+    const oversized: string[] = [];
     
     for (const file of componentFiles) {
       const filePath = path.join(COMPONENTS_DIR, file);

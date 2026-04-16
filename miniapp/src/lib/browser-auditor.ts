@@ -9,7 +9,7 @@
  * - Extract contract addresses from page for Group 3 pipeline
  */
 
-import { TargetType, ResolvedTarget } from './types';
+import { ResolvedTarget } from './types';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
@@ -52,7 +52,7 @@ export interface BrowserAuditResult {
 
 // ─── Agent Browser API ─────────────────────────────────────────────────────
 
-async function agentBrowserRequest<T = any>(command: object): Promise<T> {
+async function agentBrowserRequest<T>(command: object): Promise<T> {
   const res = await fetch(`${AGENT_BROWSER_URL}/execute`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -73,9 +73,10 @@ async function agentBrowserRequest<T = any>(command: object): Promise<T> {
 
 // ─── UI Security Checks ────────────────────────────────────────────────────
 
-async function checkCSP(page: any): Promise<UIFinding | null> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function checkCSP(_page: unknown): Promise<UIFinding | null> {
   // Agent-browser would run this via evaluate
-  const result = await agentBrowserRequest({
+  const result = await agentBrowserRequest<{ hasCSP: boolean; cspContent: string | null; blocked: number } | null>({
     action: 'evaluate',
     script: `
       (() => {
@@ -102,9 +103,10 @@ async function checkCSP(page: any): Promise<UIFinding | null> {
   return null;
 }
 
-async function checkExternalScripts(page: any): Promise<UIFinding[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function checkExternalScripts(_page: unknown): Promise<UIFinding[]> {
   const findings: UIFinding[] = [];
-  const result = await agentBrowserRequest({
+  const result = await agentBrowserRequest<Array<{ src: string; integrity: string; async: boolean; defer: boolean } | null>>({
     action: 'evaluate',
     script: `
       Array.from(document.querySelectorAll('script[src]')).map(s => ({
@@ -116,7 +118,7 @@ async function checkExternalScripts(page: any): Promise<UIFinding[]> {
     `
   });
 
-  for (const script of result || []) {
+  for (const script of (result || []).filter((s): s is NonNullable<typeof s> => s != null)) {
     if (!script.integrity && !script.src.includes(location.hostname)) {
       findings.push({
         type: 'script',
@@ -131,9 +133,10 @@ async function checkExternalScripts(page: any): Promise<UIFinding[]> {
   return findings;
 }
 
-async function checkIframes(page: any): Promise<UIFinding[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function checkIframes(_page: unknown): Promise<UIFinding[]> {
   const findings: UIFinding[] = [];
-  const result = await agentBrowserRequest({
+  const result = await agentBrowserRequest<Array<{ src: string; sandbox: string | null; allow: string | null } | null>>({
     action: 'evaluate',
     script: `
       Array.from(document.querySelectorAll('iframe')).map(i => ({
@@ -144,7 +147,7 @@ async function checkIframes(page: any): Promise<UIFinding[]> {
     `
   });
 
-  for (const iframe of result || []) {
+  for (const iframe of (result || []).filter((i): i is NonNullable<typeof i> => i != null)) {
     if (!iframe.sandbox && !iframe.src.startsWith('about:')) {
       findings.push({
         type: 'iframe',
@@ -159,9 +162,10 @@ async function checkIframes(page: any): Promise<UIFinding[]> {
   return findings;
 }
 
-async function checkWalletConnectors(page: any): Promise<UIFinding[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function checkWalletConnectors(_page: unknown): Promise<UIFinding[]> {
   const findings: UIFinding[] = [];
-  const result = await agentBrowserRequest({
+  const result = await agentBrowserRequest<string[]>({
     action: 'evaluate',
     script: `
       (() => {
@@ -200,8 +204,9 @@ async function checkWalletConnectors(page: any): Promise<UIFinding[]> {
   return findings;
 }
 
-async function extractContractAddresses(page: any): Promise<string[]> {
-  const result = await agentBrowserRequest({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function extractContractAddresses(_page: unknown): Promise<string[]> {
+  const result = await agentBrowserRequest<string[]>({
     action: 'evaluate',
     script: `
       (() => {
@@ -241,7 +246,7 @@ export async function runBrowserAudit(
 
   try {
     // 1. Launch browser session
-    const session = await agentBrowserRequest<{ sessionId: string }>({
+    await agentBrowserRequest<{ sessionId: string }>({
       action: 'launch',
       headless: true,
     });

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import type { JobSession, JobStatus } from '~/lib/types';
+import type { JobStatus } from '~/lib/types';
 
 export interface DashboardProps {
   workspaceId?: string;
@@ -37,8 +37,8 @@ const AMBIENT_COLORS: Record<JobStatus, string> = {
 };
 
 export function FocusDashboard({
-  workspaceId,
-  userId,
+  workspaceId: _workspaceId = '',
+  userId: _userId = '',
   className = '',
 }: DashboardProps) {
   const router = useRouter();
@@ -52,7 +52,8 @@ export function FocusDashboard({
   const [focusMode, setFocusMode] = useState(false);
   const [activeAudit, setActiveAudit] = useState<AuditSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // kept for mobile toggle
+  void _workspaceId; void _userId; void sidebarOpen;
   const prefersReducedMotion = useRef(false);
 
   useEffect(() => {
