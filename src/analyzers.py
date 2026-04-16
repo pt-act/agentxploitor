@@ -424,7 +424,19 @@ class SolanaAnalyzerAdapter(AnalyzerAdapter):
         import re
         
         vulnerabilities = []
-        target_path = Path(target)
+        target_path = Path(target).resolve()
+        
+        # Path traversal protection: ensure target stays within allowed directories
+        allowed_roots = [
+            self.output_dir.resolve(),
+            Path.cwd().resolve(),
+        ]
+        if not any(target_path.is_relative_to(root) for root in allowed_roots):
+            raise AnalyzerError(
+                f"Target path '{target}' is outside allowed directories",
+                analyzer_name=self.name,
+                target=target
+            )
         
         if not target_path.exists():
             target_path = self.output_dir / "solana_target.rs"
@@ -582,7 +594,19 @@ class FrontendAnalyzerAdapter(AnalyzerAdapter):
             vulnerabilities.extend(await self._scan_url(target))
         else:
             # Handle file targets
-            target_path = Path(target)
+            target_path = Path(target).resolve()
+            
+            # Path traversal protection: ensure target stays within allowed directories
+            allowed_roots = [
+                self.output_dir.resolve(),
+                Path.cwd().resolve(),
+            ]
+            if not any(target_path.is_relative_to(root) for root in allowed_roots):
+                raise AnalyzerError(
+                    f"Target path '{target}' is outside allowed directories",
+                    analyzer_name=self.name,
+                    target=target
+                )
             
             if not target_path.exists():
                 target_path = self.output_dir / "frontend_target"

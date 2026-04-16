@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Any, Callable
 
-from models import JobSession, JobStatus, AuditReport
+from models import JobSession, JobStatus, AuditReport, sanitize_filename
 from exceptions import AgentError, JobStateError
 
 
@@ -52,7 +52,11 @@ class JobQueue:
     
     async def _persist_job(self, job: JobSession) -> None:
         """Persist job to file."""
-        job_file = self.persist_dir / f"{job.id}.json"
+        safe_id = sanitize_filename(job.id)
+        job_file = self.persist_dir / f"{safe_id}.json"
+        # Guard against path traversal: ensure file stays within persist_dir
+        if not str(job_file.resolve()).startswith(str(self.persist_dir.resolve())):
+            raise ValueError(f"Invalid job ID would escape persist directory: {job.id}")
         with open(job_file, 'w') as f:
             json.dump(job.to_dict(), f, indent=2)
     
