@@ -244,7 +244,13 @@ class ProjectProfileStore:
         profile.subscriber_fid = subscriber_fid
         profile.updated_at = datetime.now(timezone.utc).isoformat()
         path = self._storage_dir / f"{target_id}.json"
-        path.write_text(json.dumps(profile.to_dict(), indent=2))
+        base_dir = self._storage_dir.resolve()
+        resolved_path = path.resolve()
+        try:
+            resolved_path.relative_to(base_dir)
+        except ValueError:
+            raise Exception("Invalid file path")
+        resolved_path.write_text(json.dumps(profile.to_dict(), indent=2))
 
     def list_monitored(self) -> list[ProjectProfile]:
         """Return all profiles with monitoring enabled."""
