@@ -228,7 +228,13 @@ class ProjectProfileStore:
 
         # Persist updated profile
         path = self._storage_dir / f"{target_id}.json"
-        path.write_text(json.dumps(profile.to_dict(), indent=2))
+        base_dir = self._storage_dir.resolve()
+        resolved_path = path.resolve()
+        try:
+            resolved_path.relative_to(base_dir)
+        except ValueError:
+            raise Exception("Invalid file path")
+        resolved_path.write_text(json.dumps(profile.to_dict(), indent=2))
 
         return profile
 
