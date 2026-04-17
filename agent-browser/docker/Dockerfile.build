@@ -29,4 +29,7 @@ RUN echo '[target.aarch64-unknown-linux-gnu]\nlinker = "aarch64-linux-gnu-gcc"\n
 
 WORKDIR /build
 
+RUN useradd -U -u 1000 appuser && chown -R 1000:1000 /build /.cargo
+USER 1000
+
 ENTRYPOINT ["/bin/bash"]
