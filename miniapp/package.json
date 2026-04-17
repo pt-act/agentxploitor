@@ -50,5 +50,8 @@
     "typescript": "^5",
     "vitest": "^4.1.4"
   },
-  "packageManager": "npm@11.5.2"
+  "packageManager": "npm@11.5.2",
+  "overrides": {
+    "pino@<=10.1.1": "10.1.1"
+  }
 }
