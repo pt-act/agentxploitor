@@ -55,7 +55,13 @@ export function getSocketPath(session?: string): string {
   if (isWindows) {
     return String(getPortForSession(sess));
   }
-  return path.join(os.tmpdir(), `agent-browser-${sess}.sock`);
+  const base = path.resolve(os.tmpdir());
+  const target = path.resolve(base, `agent-browser-${sess}.sock`);
+  const relative = path.relative(base, target);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    throw new Error('Invalid session parameter');
+  }
+  return target;
 }
 
 /**
@@ -63,7 +69,13 @@ export function getSocketPath(session?: string): string {
  */
 export function getPortFile(session?: string): string {
   const sess = session ?? currentSession;
-  return path.join(os.tmpdir(), `agent-browser-${sess}.port`);
+  const base = path.resolve(os.tmpdir());
+  const target = path.resolve(base, `agent-browser-${sess}.port`);
+  const relative = path.relative(base, target);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    throw new Error('Invalid session parameter');
+  }
+  return target;
 }
 
 /**
@@ -71,7 +83,13 @@ export function getPortFile(session?: string): string {
  */
 export function getPidFile(session?: string): string {
   const sess = session ?? currentSession;
-  return path.join(os.tmpdir(), `agent-browser-${sess}.pid`);
+  const base = path.resolve(os.tmpdir());
+  const target = path.resolve(base, `agent-browser-${sess}.pid`);
+  const relative = path.relative(base, target);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    throw new Error('Invalid session parameter');
+  }
+  return target;
 }
 
 /**
@@ -82,7 +100,7 @@ export function isDaemonRunning(session?: string): boolean {
   if (!fs.existsSync(pidFile)) return false;
 
   try {
-    const pid = Number.parseInt(fs.readFileSync(pidFile, 'utf8').trim(), 10);
+    const pid = Number.parseInt(fs.readFileSync(path.basename(pidFile), 'utf8').trim(), 10);
     // Check if process exists (works on both Unix and Windows)
     process.kill(pid, 0);
     return true;
@@ -104,7 +122,13 @@ export function getConnectionInfo(
   if (isWindows) {
     return { type: 'tcp', port: getPortForSession(sess) };
   }
-  return { type: 'unix', path: path.join(os.tmpdir(), `agent-browser-${sess}.sock`) };
+  const base = path.resolve(os.tmpdir());
+  const target = path.resolve(base, `agent-browser-${sess}.sock`);
+  const relative = path.relative(base, target);
+  if (relative.startsWith('..') || path.isAbsolute(relative)) {
+    throw new Error('Invalid session identifier');
+  }
+  return { type: 'unix', path: target };
 }
 
 /**
