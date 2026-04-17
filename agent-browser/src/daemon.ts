@@ -100,7 +100,7 @@ export function isDaemonRunning(session?: string): boolean {
   if (!fs.existsSync(pidFile)) return false;
 
   try {
-    const pid = Number.parseInt(fs.readFileSync(path.resolve(pidFile), 'utf8').trim(), 10);
+    const pid = Number.parseInt(fs.readFileSync(path.basename(pidFile), 'utf8').trim(), 10);
     // Check if process exists (works on both Unix and Windows)
     process.kill(pid, 0);
     return true;
