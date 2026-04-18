@@ -56,6 +56,10 @@ yarn-error.log*
 target/
 Cargo.lock
 
+# Orion Framework (local working context)
+.agents/
+.personal/
+
 # Misc
 .plip/
 .ruff_cache/
