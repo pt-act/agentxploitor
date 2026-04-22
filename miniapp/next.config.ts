@@ -21,15 +21,15 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live",
-              "style-src 'self' 'unsafe-inline'",
+              "script-src 'self' 'unsafe-inline' https://vercel.live",  // TODO: migrate to nonce-based CSP — Next.js requires inline scripts for hydration
+              "style-src 'self' 'unsafe-inline'",  // Tailwind CSS requires unsafe-inline for styles
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://mainnet.base.org https://api.farcaster.xyz",
-              "frame-ancestors *",
+              "connect-src 'self' https://mainnet.base.org https://api.farcaster.xyz https://*.quiknode.pro https://api.openai.com",
+              "frame-ancestors https://warpcast.com https://farcaster.xyz https://*.vercel.app https://*.netlify.app",
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-src https://farcaster.xyz"
+              "frame-src https://farcaster.xyz https://warpcast.com"
             ].join("; ")
           },
           {

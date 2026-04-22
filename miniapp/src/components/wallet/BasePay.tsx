@@ -152,8 +152,8 @@ export function BasePay() {
   const [paymentState, setPaymentState] = useState<PaymentState>({ status: 'idle', message: '' });
   const [amount, setAmount] = useState("5.00");
   
-  // dylsteck.base.eth
-  const recipient = "0x8342A48694A74044116F330db5050a267b28dD85";
+  // Treasury address — configurable via env var, hardcoded fallback for local dev
+  const recipient = (process.env.NEXT_PUBLIC_TREASURY_ADDRESS || "0x8342A48694A74044116F330db5050a267b28dD85") as `0x${string}`;
 
   const handlePay = async () => {
     try {
@@ -171,7 +171,7 @@ export function BasePay() {
       });
 
       const payResult = result as PayResult;
-      console.log('pay result', payResult);
+      // Payment result processed — details available via getPaymentStatus
       const transactionId = payResult?.id || payResult?.transactionId || 'unknown';
       
       setPaymentState({
@@ -214,8 +214,8 @@ export function BasePay() {
               timestamp: new Date()
             });
           }
-        } catch (statusError) {
-          console.error("Status check error:", statusError);
+        } catch {
+          // Status check failed — report to user
           setPaymentState({
             status: 'failed',
             message: 'Unable to verify payment status. Please check the transaction manually.',

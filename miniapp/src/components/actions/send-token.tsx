@@ -6,7 +6,7 @@ import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { useSendToken } from "@coinbase/onchainkit/minikit";
 
-const RECIPIENT_ADDRESS = "0x8342A48694A74044116F330db5050a267b28dD85";
+const RECIPIENT_ADDRESS = (process.env.NEXT_PUBLIC_TREASURY_ADDRESS || "0x8342A48694A74044116F330db5050a267b28dD85") as `0x${string}`;
 
 export function SendTokenAction() {
   const [recipientAddress, setRecipientAddress] = useState<string>(RECIPIENT_ADDRESS);

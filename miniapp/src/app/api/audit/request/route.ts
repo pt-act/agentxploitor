@@ -176,15 +176,7 @@ export async function POST(request: NextRequest) {
       await jobStore.enqueue(auditId);
     }
 
-    console.log('[AuditRequest] Created:', {
-      id: auditId,
-      fid: auth.fid,
-      auditType,
-      targetType,
-      status,
-      paymentToken,
-      paymentVerified,
-    });
+    console.log('[AuditRequest] Created:', { id: auditId, auditType, targetType, status });
 
     return NextResponse.json({
       auditId,

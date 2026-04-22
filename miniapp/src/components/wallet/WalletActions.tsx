@@ -55,8 +55,8 @@ export function WalletConnect() {
     try {
       await baseAccountSDK.getProvider().request({ method: 'wallet_connect' });
       setBaseSignedIn(true);
-    } catch (error) {
-      console.error('Base sign in failed:', error);
+    } catch {
+      // Sign-in rejected or failed — UI state unchanged
     }
   };
 
@@ -174,7 +174,7 @@ export function SignSiweMessage() {
       uri: window.location.origin,
       version: "1",
       chainId: chainId || base.id,
-      nonce: Math.random().toString(36).substring(2, 15),
+      nonce: crypto.randomUUID().replace(/-/g, ''),
     });
 
     signMessage({ message: siweMessage.prepareMessage() });

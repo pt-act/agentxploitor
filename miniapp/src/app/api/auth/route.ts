@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
       domain: getUrlHost(request),
     });
 
-    console.log("payload", payload);
+    // Token verified successfully — payload contains FID
 
     // If the token was valid, `payload.sub` will be the user's Farcaster ID.
     const userFid = payload.sub;
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     if (e instanceof Errors.InvalidTokenError) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
-    console.error('Authentication error:', e);
+    console.error('[Auth] JWT verification failed:', e instanceof Error ? e.message : 'unknown');
     return NextResponse.json(
       { message: "An internal error occurred" },
       { status: 500 }
