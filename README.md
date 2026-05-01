@@ -1,11 +1,5 @@
 # AgentxploiTor - Autonomous Security Agent for Bounty 2
 
-**Target**: Superteam Bounty 2 - Autonomous AI Product  
-**Payout**: $2,000 - $3,000 USDG  
-**Deadline**: Feb 15, 2026
-
----
-
 ## 🎯 What Is AgentxploiTor?
 
 **AgentxploiTor is the first autonomous AI security agent with visual exploit verification.**
