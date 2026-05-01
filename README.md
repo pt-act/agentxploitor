@@ -1,4 +1,4 @@
-# AgentxploiTor - Autonomous Security Agent for Bounty 2
+# AgentxploiTor - Autonomous Security Agent 
 
 ## 🎯 What Is AgentxploiTor?
 
