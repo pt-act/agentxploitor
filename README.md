@@ -2,7 +2,7 @@
 
 ## 🎯 What Is AgentxploiTor?
 
-**AgentxploiTor is the first autonomous AI security agent with visual exploit verification.**
+**AgentxploiTor is an autonomous AI security agent with visual exploit verification.**
 
 > The name combines "Agent" + "Exploit" + "Tor" (viewer in Latin) - an agent that exploits vulnerabilities and sees/verifies the results.
 
